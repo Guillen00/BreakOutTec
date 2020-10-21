@@ -12,17 +12,21 @@
 
 #define numCol 5
 #define numFilas 8
-#define puntajeVerde 2
-#define puntajeAmarillo 10
-#define puntajeNaranja 15
-#define puntajeRojo 20
+
+#define puntajeVerdeInicial 2
+#define puntajeAmarilloInicial 10
+#define puntajeNaranjIniciala 15
+#define puntajeRojoInicial 20
+
 #define probRaqMitadinicial 15
 #define probRaqDobleinicial 15
 #define probVelMasinicial 15
 #define probVelMenosinicial 15
 #define probVidaInicial 15
 #define probBalonInicial 15
+
+#define raquetaTamanoInicial 1000
 #define vidaInicial 3
-#define velocidadInicial 3
+#define velocidadInicial 1000
 
 #endif //SERVER_CONSTANTS_H

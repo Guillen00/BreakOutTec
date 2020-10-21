@@ -6,9 +6,9 @@
 #include "estructuras.h"
 #include "constants.h"
 
-void agregarNodo(struct lista* lista, struct ladrillo* ladrillo){
+void agregarNodo(struct lista* lista, void* data){
     struct nodo* nuevoNodo=malloc(sizeof(struct nodo));
-    *nuevoNodo=(struct nodo){ladrillo, NULL};
+    *nuevoNodo=(struct nodo){data, NULL};
     struct nodo* actualNodo=lista->primero;
 
     if (lista->primero==NULL){
@@ -19,6 +19,16 @@ void agregarNodo(struct lista* lista, struct ladrillo* ladrillo){
         }
         actualNodo->next=nuevoNodo;
     }
+}
+
+void* obtenerSiguiente(void* anterior, struct lista* lista){
+    struct nodo* actualNodo=lista->primero;
+    bool flag=1;
+    while(actualNodo!=NULL && flag){
+        flag=actualNodo->data!=anterior;
+        actualNodo=actualNodo->next;
+    }
+    return actualNodo==NULL? NULL : actualNodo->data;
 }
 struct nodo* obtenerNodo(struct lista* lista, int pos){
     struct nodo* actualNodo=lista->primero;
@@ -51,16 +61,6 @@ struct ladrillo* crearLadrillo(int color, struct juego* juego){
     ladrillo->balon=rand() % 100<juego->probBalon;
     ladrillo->vida=rand() % 100<juego->probVida;
     ladrillo->destruido=false;
-
-    if(color==VERDE){
-        ladrillo->puntaje=puntajeVerde;
-    }else if(color==AMARILLO){
-        ladrillo->puntaje=puntajeAmarillo;
-    }else if(color==NARANJA){
-        ladrillo->puntaje=puntajeNaranja;
-    }else if(color==ROJO){
-        ladrillo->puntaje=puntajeRojo;
-    }
 }
 struct lista* crearFila(int color, struct juego* juego){
     struct lista* lista=malloc(sizeof(struct lista));
@@ -78,5 +78,19 @@ struct lista* crearFila(int color, struct juego* juego){
         actualNodo=nuevoNodo;
     }
     return lista;
+}
+
+struct ladrillo* obtenerLadrilloDestruido(int matriz[numFilas][numCol], struct lista listas[numFilas]){
+    struct nodo* actualNodo;
+    for(int i=0;i<numFilas;i++) {
+        actualNodo=listas[i].primero;
+        for(int j=0;j<numCol;j++) {
+            if(((struct ladrillo*)actualNodo->data)->destruido!=matriz[i][j] && matriz[i][j]==1){
+                return actualNodo->data;
+            }
+            actualNodo = actualNodo->next;
+        }
+    }
+    return NULL;
 }
 

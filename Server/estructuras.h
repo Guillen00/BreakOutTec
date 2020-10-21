@@ -5,10 +5,14 @@
 #ifndef SERVER_ESTRUCTURAS_H
 #define SERVER_ESTRUCTURAS_H
 
+#include "constants.h"
+
 typedef enum { false, true } bool;
+
+
+
 struct ladrillo{
     int color;
-    int puntaje;
     bool raquetaMitad;
     bool raquetaDoble;
     bool velocidadMas;
@@ -17,8 +21,14 @@ struct ladrillo{
     bool balon;
     bool destruido;
 };
+
+struct coordenadas{
+    int x;
+    int y;
+};
+
 struct nodo{
-    struct ladrillo* ladrillo;
+    void* data;
     struct nodo* next;
 };
 struct lista{
@@ -27,11 +37,20 @@ struct lista{
 struct juego{
     struct lista listas[8];
     int vidas;
+    int vidaAnterior;
     int nivel;
-    int posicionX;
-    int posicionY;
-
+    int posicionRaqX;
+    struct lista* coordenadasList;
+    int puntaje;
+    int balones;
     int velocidad;
+
+    int raquetaTamano;
+
+    int puntajeVerde;
+    int puntajeAmarillo;
+    int puntajeNaranja;
+    int puntajeRojo;
 
     int probRaqMitad;
     int probRaqDoble;
@@ -43,10 +62,11 @@ struct juego{
     int probBalon;
 };
 
-void agregarNodo(struct lista* lista, struct ladrillo* ladrillo);
+void agregarNodo(struct lista* lista, void* data);
+void* obtenerSiguiente(void* anterior, struct lista* lista);
 struct nodo* obtenerNodo(struct lista* lista, int pos);
 struct ladrillo* crearLadrillo(int color, struct juego* juego);
 struct lista* crearFila(int color, struct juego* juego);
-
+struct ladrillo* obtenerLadrilloDestruido(int matriz[numFilas][numCol], struct lista listas[numFilas] );
 
 #endif //SERVER_ESTRUCTURAS_H
