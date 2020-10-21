@@ -15,9 +15,17 @@ import javax.swing.ImageIcon;
 public class Paddle extends Sprite  {
 
     private int dx;
+    private int largo;
 
+    public int getLargo() {
+        return largo;
+    }
+
+    public void setLargo(int largo) {
+        this.largo = largo;
+    }
+    
     public Paddle() {
-
         initPaddle();
     }
 

@@ -15,7 +15,16 @@ public class Ball extends Sprite {
 
     private int xdir;
     private int ydir;
+    private int velocida;
 
+    public int getVelocida() {
+        return velocida;
+    }
+    
+    public void setVelocida(int velocida) {
+        this.velocida = velocida;
+    }
+    
     public Ball() {
 
         initBall();
@@ -43,18 +52,14 @@ public class Ball extends Sprite {
         y += ydir;
 
         if (x == 0) {
-
             setXDir(1);
         }
-
         if (x == Commons.WIDTH - imageWidth) {
 
             System.out.println(imageWidth);
             setXDir(-1);
         }
-
         if (y == 0) {
-
             setYDir(1);
         }
     }
@@ -69,14 +74,11 @@ public class Ball extends Sprite {
 
         xdir = x;
     }
-
     void setYDir(int y) {
 
         ydir = y;
     }
-
     int getYDir() {
-
         return ydir;
     }
 }

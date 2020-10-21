@@ -14,17 +14,24 @@ import javax.swing.ImageIcon;
 public class Brick extends Sprite {
 
     private boolean destroyed;
+    private int posX,posY;
+    private String habilidad;
+ 
+    public Brick(int posX, int posY) {
 
-    public Brick(int x, int y) {
-
-        initBrick(x, y);
+        initBrick(posX, posY);
     }
-
+    
+    public void setHabilidad(int posX , int posY,String habilidad){
+        if(posX == this.posX && this.posY == posY){
+            this.habilidad = habilidad;
+        }
+    }
     private void initBrick(int x, int y) {
 
-        this.x = x;
-        this.y = y;
-
+        this.posX = x;
+        this.posY = y;
+        this.habilidad = null;
         destroyed = false;
 
         loadImage();
