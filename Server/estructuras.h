@@ -68,5 +68,6 @@ struct nodo* obtenerNodo(struct lista* lista, int pos);
 struct ladrillo* crearLadrillo(int color, struct juego* juego);
 struct lista* crearFila(int color, struct juego* juego);
 struct ladrillo* obtenerLadrilloDestruido(int matriz[numFilas][numCol], struct lista listas[numFilas] );
-
+void borrarUltimo(struct lista* lista);
+bool quedanLadrillos(struct lista listas[numFilas]);
 #endif //SERVER_ESTRUCTURAS_H

@@ -59,18 +59,18 @@ int juegoToChar(char* texto,struct juego* juego){
     char* index= texto;
     sprintf(index, "%d;",juego->vidas);
     index+=calcularLongitudAsString(juego->vidas);
-    sprintf(index, "%d\n",juego->posicionRaqX);
+    sprintf(index, "%d;",juego->posicionRaqX);
     index+=calcularLongitudAsString(juego->posicionRaqX);
+    sprintf(index, "%d;",juego->balones);
+    index+=calcularLongitudAsString(juego->balones);
     sprintf(index, "%d;",juego->nivel);
     index+=calcularLongitudAsString(juego->nivel);
     sprintf(index, "%d;",juego->raquetaTamano);
     index+=calcularLongitudAsString(juego->raquetaTamano);
     sprintf(index, "%d;",juego->velocidad);
     index+=calcularLongitudAsString(juego->velocidad);
-    sprintf(index, "%d;",juego->puntaje);
+    sprintf(index, "%d\n",juego->puntaje);
     index+=calcularLongitudAsString(juego->puntaje);
-    sprintf(index, "%d\n",juego->balones);
-    index+=calcularLongitudAsString(juego->balones);
 
     index+=coordenadasToChar(index, juego->coordenadasList);
 
@@ -88,6 +88,8 @@ void actualizarValoresGenerales(char* texto,struct juego* juego){
     juego->vidas=atoi(token);
     token = strtok_r(NULL, ";",&aux);
     juego->posicionRaqX=atoi(token);
+    token = strtok_r(NULL, ";",&aux);
+    juego->balones=atoi(token);
 }
 
 void actualizarCoordenadas(char* texto,struct juego* juego){

@@ -7,7 +7,7 @@
 #include "parser.h"
 #include "constants.h"
 
-struct juego juego={NULL,.vidas=vidaInicial,vidaInicial,1,0,(struct lista*){NULL},0,1,
+struct juego juego={NULL,.vidas=vidaInicial,vidaInicial,1,0,NULL,0,1,
                     velocidadInicial,raquetaTamanoInicial,puntajeVerdeInicial,puntajeAmarilloInicial,
                     puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
                     probRaqDobleinicial,probVelMasinicial,probVelMenosinicial,
@@ -22,6 +22,9 @@ void nuevasListas(){
 }
 
 void iniciarCoordenadas(){
+    struct lista* lista=malloc(sizeof(struct lista));
+    *lista=(struct lista){NULL};
+    juego.coordenadasList=lista;
     struct lista* coords=juego.coordenadasList;
     struct coordenadas* coordenadas= malloc(sizeof(struct coordenadas));
     *coordenadas=(struct coordenadas){-1,-1};
@@ -38,12 +41,6 @@ void algoritmoDeCambioExponencial(){
     juego.velocidad*=1.3;
 }
 
-void aumentarNivel(){
-    algoritmoDeCambioExponencial();
-    nuevasListas();
-    iniciarCoordenadas();
-    juego.balones=1;
-}
 
 void subirPuntaje(int color){
     if(color==VERDE){
@@ -81,12 +78,58 @@ void ladrilloDestruido(struct ladrillo* ladrillo){
     subirPuntaje(ladrillo->color);
 }
 
+void reiniciarJuego(){
+    juego=(struct juego){NULL,.vidas=vidaInicial,vidaInicial,1,0,
+            (struct lista*){NULL},0,1,
+           velocidadInicial,raquetaTamanoInicial,puntajeVerdeInicial,puntajeAmarilloInicial,
+           puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
+           probRaqDobleinicial,probVelMasinicial,probVelMenosinicial,
+           probVidaInicial,probBalonInicial};
+    nuevasListas();
+    iniciarCoordenadas();
+}
+
+
+void aumentarNivel(){
+    algoritmoDeCambioExponencial();
+    nuevasListas();
+    iniciarCoordenadas();
+    juego.balones=1;
+    juego.nivel++;
+}
+
+void revisarLadrillos(int matriz[numFilas][numCol]){
+    struct ladrillo *ladrillo = obtenerLadrilloDestruido(matriz, juego.listas);
+    ladrilloDestruido(ladrillo);
+}
+
+bool pasarNivel(){
+    return !quedanLadrillos(juego.listas);
+}
+
+void revisarVida(){
+    if(juego.vidas<juego.vidaAnterior){
+        if(juego.balones>1){
+            borrarUltimo(juego.coordenadasList);
+        }
+        juego.vidaAnterior=juego.vidas;
+    }
+}
+
 void actualizarJuego(){
-    char* mensajeRecibido="6;5;7\n4;2;3;4;5\n5;4;3;2;1\n0;0;0;0;0\n1;2;3;4;5\n5;4;3;2;1\n0;0;0;0;0\n1;0;1;0;1\n0;1;0;1;0\n";
+    char* mensajeRecibido="1;2;3;4;5;6;7\n1;1;2;2\n4;2;3;4;5\n5;4;3;2;1\n0;0;0;0;0\n1;2;3;4;5\n5;4;3;2;1\n0;0;0;0;0\n1;0;1;0;1\n0;1;0;1;0\n";
     int matriz[numFilas][numCol];
     charToJuego(matriz,mensajeRecibido,&juego);
-    struct ladrillo* ladrillo=obtenerLadrilloDestruido(matriz,  juego.listas);
-    ladrilloDestruido(ladrillo);
+    if(juego.vidas>0){
+        revisarVida();
+        if(!pasarNivel()){
+            revisarLadrillos(matriz);
+        }else{
+            aumentarNivel();
+        }
+    }else{
+        reiniciarJuego();
+    }
 }
 
 void iniciar(){
@@ -97,19 +140,4 @@ void iniciar(){
     printf("%s",texto);
     actualizarJuego();
     printf("%s","dd");
-}
-
-void reiniciarJuego(){
-    juego.vidas = vidaInicial;
-    juego.nivel= 1;
-    juego.velocidad=velocidadInicial;
-
-    juego.probRaqMitad=probRaqMitadinicial;
-    juego.probRaqDoble=probRaqDobleinicial;
-
-    juego.probVelMas=probVelMasinicial;
-    juego.probVelMenos=probVelMenosinicial;
-
-    juego.probVida=probVidaInicial;
-    juego.probBalon=probBalonInicial;
 }

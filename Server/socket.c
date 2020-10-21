@@ -8,41 +8,129 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "socket.h"
+#include "estructuras.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 // #pragma comment (lib, "Mswsock.lib")
 
-#define DEFAULT_BUFLEN 2048
-#define DEFAULT_PORT "27015"
+SOCKET JugadorSocket;
+SOCKET EspectadoresSockets[MAX_CLIENTS];
+int jugadorActivo;
+int espectadorActivo[MAX_CLIENTS];
 
-
-int connectionHandler(SOCKET ClientSocket,int iSendResult
-        ,int recvbuflen, int iResult){
-
-    char rec[DEFAULT_BUFLEN];
-    char* message;
-    if (ClientSocket == INVALID_SOCKET) {
-        printf("accept failed with error: %d\n", WSAGetLastError());
-        return 1;
-    }
-    iResult = recv(ClientSocket, rec, recvbuflen, 0);
+int recibirMensaje(SOCKET ClientSocket,char* rec){
+    int iResult = recv(ClientSocket, rec, DEFAULT_BUFLEN, 0);
     if(iResult<=0){
         printf("Connection closing...\n");
         closesocket(ClientSocket);
         shutdown(ClientSocket, SD_SEND);
         return 1;
     }
+    return 0;
+}
 
-
-    iSendResult = send(ClientSocket, message, iResult, 0);
+int enviarMensaje(SOCKET ClientSocket,char* message){
+    int iSendResult = send(ClientSocket, message, DEFAULT_BUFLEN, 0);
     if (iSendResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(ClientSocket);
         return 1;
     }
+    return 0;
+}
+
+int isJugadorActivo(){
+    return jugadorActivo;
+}
+
+int recibirDatos(char* datos){
+    int resultado;
+    if(jugadorActivo){
+        resultado=recibirMensaje(JugadorSocket,datos);
+        if(resultado==MESSAGE_ERROR){
+            jugadorActivo=false;
+        }
+    }else{
+        resultado=MESSAGE_ERROR;
+    }
+    return resultado;
+}
 
 
+void enviarDatos(char* datos){
+    for(int i =0;i<MAX_CLIENTS;i++){
+        if(espectadorActivo[i]){
+            int resultado=enviarMensaje(EspectadoresSockets[i],datos);
+            if(resultado==MESSAGE_ERROR){
+                espectadorActivo[i]=false;
+            }
+        }
+    }
+}
+
+int asignarJugador(SOCKET ClientSocket, char* message){
+    if(!jugadorActivo){
+        JugadorSocket=ClientSocket;
+        jugadorActivo=true;
+        return 0;
+    }else{
+        strcpy(message,"Error: Ya hay un Jugador");
+        enviarMensaje(ClientSocket, message);
+        closesocket(ClientSocket);
+        return 1;
+    }
+}
+
+int asignarEspectador(SOCKET ClientSocket, char* message){
+    int asignado=false;
+    for(int i=0;i<MAX_CLIENTS;i++){
+        if(!espectadorActivo[i]){
+            EspectadoresSockets[i]=ClientSocket;
+            espectadorActivo[i]=true;
+            asignado =true;
+        }
+    }
+    if(!asignado){
+        strcpy(message,"Error: Pila llena");
+        enviarMensaje(ClientSocket, message);
+        closesocket(ClientSocket);
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int connectionHandler(SOCKET ClientSocket){
+
+    char rec[DEFAULT_BUFLEN];
+    char message[DEFAULT_BUFLEN];
+    if (ClientSocket == INVALID_SOCKET) {
+        printf("accept failed with error: %d\n", WSAGetLastError());
+        return 1;
+    }
+
+    if(recibirMensaje(ClientSocket,rec)==MESSAGE_ERROR){
+        return 1;
+    }
+    if(strcmp("Tipo: Espectador", rec)==0){
+        return asignarEspectador(ClientSocket, message);
+    }else if(strcmp("Tipo: Jugador", rec)==0){
+        if(asignarJugador(ClientSocket, message)==0){
+            if(asignarEspectador(ClientSocket, message)==1){
+                jugadorActivo=false;
+                return 1;
+            }else{
+                return 0;
+            }
+        }else{
+            return 1;
+        }
+    }else{
+        closesocket(ClientSocket);
+        return 1;
+    }
 }
 
 int iniciarServer()
@@ -55,10 +143,6 @@ int iniciarServer()
 
     struct addrinfo *result = NULL;
     struct addrinfo hints;
-
-    int iSendResult;
-    char recvbuf[DEFAULT_BUFLEN];
-    int recvbuflen = DEFAULT_BUFLEN;
 
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -115,8 +199,7 @@ int iniciarServer()
     while(1) {
         pthread_t thread_id;
         ClientSocket = accept(ListenSocket, NULL, NULL);
-        pthread_create(&thread_id, NULL, (void *(*)(void *)) connectionHandler(ClientSocket, iSendResult,
-                                                                                recvbuflen, iResult), NULL);
+        pthread_create(&thread_id, NULL, (void *(*)(void *)) connectionHandler(ClientSocket), NULL);
     }
     return 0;
 }
