@@ -32,8 +32,7 @@ int listasToChar(char* texto, struct juego* juego){
     for(int i=0; i<numFilas;i++){
         length=listaToChar(index,&juego->listas[i]);
         index+=length;
-        *index='\n';
-        index++;
+        *(index-1)='\n';
     }
     return index-texto;
 }
@@ -100,7 +99,7 @@ void actualizarCoordenadas(char* texto,struct juego* juego){
 
     struct coordenadas* coords=obtenerSiguiente(NULL,juego->coordenadasList);
     while (coords!=NULL && token!=NULL){
-        coords->x=atoi(token);
+        coords->x = atoi(token);
         token = strtok_r(NULL, ";",&aux);
         coords->y = atoi(token);
         token = strtok_r(NULL, ";",&aux);

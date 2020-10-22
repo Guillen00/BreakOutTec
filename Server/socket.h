@@ -9,6 +9,9 @@
 #define DEFAULT_PORT "27015"
 #define MAX_CLIENTS 10
 #define MESSAGE_ERROR 1
-int iniciarServer();
+int recibirDatos(char* datos);
+void enviarDatos(char* datos);
+
+_Noreturn int iniciarServer();
 
 #endif //SERVER_SOCKET_H

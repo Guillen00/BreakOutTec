@@ -3,9 +3,11 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include "estructuras.h"
 #include "parser.h"
 #include "constants.h"
+#include "socket.h"
 
 struct juego juego={NULL,.vidas=vidaInicial,vidaInicial,1,0,NULL,0,1,
                     velocidadInicial,raquetaTamanoInicial,puntajeVerdeInicial,puntajeAmarilloInicial,
@@ -100,7 +102,9 @@ void aumentarNivel(){
 
 void revisarLadrillos(int matriz[numFilas][numCol]){
     struct ladrillo *ladrillo = obtenerLadrilloDestruido(matriz, juego.listas);
-    ladrilloDestruido(ladrillo);
+    if(ladrillo!=NULL) {
+        ladrilloDestruido(ladrillo);
+    }
 }
 
 bool pasarNivel(){
@@ -116,28 +120,43 @@ void revisarVida(){
     }
 }
 
-void actualizarJuego(){
-    char* mensajeRecibido="1;2;3;4;5;6;7\n1;1;2;2\n4;2;3;4;5\n5;4;3;2;1\n0;0;0;0;0\n1;2;3;4;5\n5;4;3;2;1\n0;0;0;0;0\n1;0;1;0;1\n0;1;0;1;0\n";
-    int matriz[numFilas][numCol];
-    charToJuego(matriz,mensajeRecibido,&juego);
-    if(juego.vidas>0){
-        revisarVida();
-        if(!pasarNivel()){
-            revisarLadrillos(matriz);
+void actualizarJuego(char* texto){
+    _sleep(10);
+    enviarDatos(texto);
+    ///Se reciben los datos
+    if(recibirDatos(texto)!=MESSAGE_ERROR){
+        int matriz[numFilas][numCol];
+        ///Se parsean los datos
+        charToJuego(matriz,texto,&juego);
+        ///Se actualizan los datos necesarios
+        if(juego.vidas>0){
+            revisarVida();
+            if(!pasarNivel()){
+                revisarLadrillos(matriz);
+            }else{
+                aumentarNivel();
+            }
         }else{
-            aumentarNivel();
+            reiniciarJuego();
         }
-    }else{
-        reiniciarJuego();
+        ///Se envian los datos
+        juegoToChar(texto, &juego);
+        enviarDatos(texto);
     }
 }
 
-void iniciar(){
+_Noreturn void iniciar(){
     nuevasListas();
     iniciarCoordenadas();
-    char texto[10000];
-    juegoToChar(texto, &juego);
-    printf("%s",texto);
-    actualizarJuego();
-    printf("%s","dd");
+    pthread_t thread_id;
+    pthread_create(&thread_id, NULL, (void *(*)(void *)) iniciarServer, NULL);
+
+    bool flag=true;
+    char texto[DEFAULT_BUFLEN];
+    for(int i=0;i<DEFAULT_BUFLEN;i++){
+        texto[i]='\0';
+    }
+    while(flag){
+        actualizarJuego(texto);
+    }
 }

@@ -90,6 +90,7 @@ int asignarEspectador(SOCKET ClientSocket, char* message){
             EspectadoresSockets[i]=ClientSocket;
             espectadorActivo[i]=true;
             asignado =true;
+            break;
         }
     }
     if(!asignado){
@@ -133,8 +134,14 @@ int connectionHandler(SOCKET ClientSocket){
     }
 }
 
-int iniciarServer()
+_Noreturn int iniciarServer()
 {
+
+    for(int i=0;i<MAX_CLIENTS;i++){
+       espectadorActivo[i]=false;
+    }
+    jugadorActivo=false;
+
     WSADATA wsaData;
     int iResult;
 
