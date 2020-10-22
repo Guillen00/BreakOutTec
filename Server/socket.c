@@ -104,7 +104,6 @@ int asignarEspectador(SOCKET ClientSocket, char* message){
 }
 
 int connectionHandler(SOCKET ClientSocket){
-
     char rec[DEFAULT_BUFLEN];
     char message[DEFAULT_BUFLEN];
     if (ClientSocket == INVALID_SOCKET) {
