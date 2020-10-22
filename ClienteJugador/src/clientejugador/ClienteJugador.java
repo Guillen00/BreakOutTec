@@ -5,17 +5,36 @@
  */
 package clientejugador;
 
+import javax.swing.JFrame;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
+
 /**
  *
  * @author Usuario
  */
-public class ClienteJugador {
+public class ClienteJugador extends JFrame{
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
     
+    public ClienteJugador() {
+
+        initUI();
+    } 
+    
+    public static void main(String[] args) {
+        ClienteJugador game = new ClienteJugador();
+        game.setVisible(true);
+    }
+    private void initUI() {
+
+        add(new Interfaz());
+        setTitle("BreakoutTEC");
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        pack();
+    }
 }

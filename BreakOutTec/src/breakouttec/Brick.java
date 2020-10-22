@@ -31,7 +31,7 @@ public class Brick extends Sprite {
 
         this.posX = x;
         this.posY = y;
-        this.habilidad = null;
+        //this.habilidad = null;
         destroyed = false;
 
         loadImage();
