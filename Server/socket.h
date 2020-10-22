@@ -11,7 +11,7 @@
 #define MESSAGE_ERROR 1
 int recibirDatos(char* datos);
 void enviarDatos(char* datos);
-
+int isJugadorActivo();
 _Noreturn int iniciarServer();
 
 #endif //SERVER_SOCKET_H

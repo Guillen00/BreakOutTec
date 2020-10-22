@@ -122,26 +122,26 @@ void revisarVida(){
 
 void actualizarJuego(char* texto){
     _sleep(10);
-    enviarDatos(texto);
-    ///Se reciben los datos
-    if(recibirDatos(texto)!=MESSAGE_ERROR){
-        int matriz[numFilas][numCol];
-        ///Se parsean los datos
-        charToJuego(matriz,texto,&juego);
-        ///Se actualizan los datos necesarios
-        if(juego.vidas>0){
-            revisarVida();
-            if(!pasarNivel()){
-                revisarLadrillos(matriz);
-            }else{
-                aumentarNivel();
-            }
-        }else{
-            reiniciarJuego();
-        }
-        ///Se envian los datos
+    if(isJugadorActivo()) {
         juegoToChar(texto, &juego);
         enviarDatos(texto);
+        ///Se reciben los datos
+        if (recibirDatos(texto) != MESSAGE_ERROR) {
+            int matriz[numFilas][numCol];
+            ///Se parsean los datos
+            charToJuego(matriz, texto, &juego);
+            ///Se actualizan los datos necesarios
+            if (juego.vidas > 0) {
+                revisarVida();
+                if (!pasarNivel()) {
+                    revisarLadrillos(matriz);
+                } else {
+                    aumentarNivel();
+                }
+            } else {
+                reiniciarJuego();
+            }
+        }
     }
 }
 
