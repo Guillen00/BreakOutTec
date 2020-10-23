@@ -13,10 +13,10 @@ import java.awt.Rectangle;
  * @author leona
  */
 public class Animacion {
-    int x;
-    int y;
-    int imageWidth;
-    int imageHeight;
+    Integer x;
+    Integer y;
+    Integer imageWidth;
+    Integer imageHeight;
     Image image;
 
     protected void setX(int x) {

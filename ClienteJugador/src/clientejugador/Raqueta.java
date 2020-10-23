@@ -13,8 +13,27 @@ import javax.swing.ImageIcon;
  * @author Usuario
  */
 public class Raqueta extends Animacion{
-    private int dx;
+    private Integer dx = 0;
+    private Integer largo = 10;//Introducir valor adecuado con la interfaz
 
+    public Integer getLargo() {
+        return largo;
+    }
+    public void setLargo(Integer largo) {
+        this.largo = largo;
+    }
+    public Integer getdX() {
+        return dx;
+    }
+    public void setdX(Integer dX) {
+        this.dx = dX;
+    }
+    public void reducirMitad(){
+        setLargo(getLargo()/2);
+    }
+    public void doblarMitad(){
+        setLargo(getLargo()*2);
+    }
     public Raqueta() {
 
         initPaddle();
@@ -33,11 +52,12 @@ public class Raqueta extends Animacion{
         ImageIcon ii = new ImageIcon("src/imagen/raqueta.png");
         image = ii.getImage();
     }
-
+    //public Integer posX; 
+    
     void move() {
-
         x += dx;
-
+        //x += dx;
+        
         if (x <= 0) {
 
             x = 0;
