@@ -38,14 +38,16 @@ void borrarUltimo(struct lista* lista){
             while (actualNodo->next->next != NULL) {
                 actualNodo = actualNodo->next;
             }
+            free(actualNodo->next);
             actualNodo->next=NULL;
         }else{
+            free(lista->primero);
             lista->primero=NULL;
         }
     }
 }
 
-struct nodo* obtenerNodo(struct lista* lista, int pos){
+void* obtenerValor(struct lista* lista, int pos){
     struct nodo* actualNodo=lista->primero;
     for(int i=0;i<pos;i++) {
         if(actualNodo==NULL){
@@ -53,7 +55,7 @@ struct nodo* obtenerNodo(struct lista* lista, int pos){
         }
         actualNodo = actualNodo->next;
     }
-    return actualNodo;
+    return actualNodo->data;
 }
 struct ladrillo* crearLadrillo(int color, struct juego* juego){
     struct ladrillo* ladrillo=malloc(sizeof(struct ladrillo));
@@ -121,4 +123,21 @@ bool quedanLadrillos(struct lista listas[numFilas]){
         }
     }
     return false;
+}
+
+
+void liberarListaAux(struct nodo* cabeza)
+{
+    struct nodo* tmp;
+    while (cabeza != NULL)
+    {
+        tmp = cabeza;
+        cabeza = cabeza->next;
+        free(tmp);
+    }
+}
+
+void liberarLista(struct lista* lista)
+{
+    liberarListaAux(lista->primero);
 }

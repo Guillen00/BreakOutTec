@@ -20,10 +20,11 @@ SOCKET EspectadoresSockets[MAX_CLIENTS];
 int jugadorActivo;
 int espectadorActivo[MAX_CLIENTS];
 
+extern int terminate;
+
 int recibirMensaje(SOCKET ClientSocket,char* rec){
     int iResult = recv(ClientSocket, rec, DEFAULT_BUFLEN, 0);
     if(iResult<=0){
-        printf("Connection closing...\n");
         closesocket(ClientSocket);
         shutdown(ClientSocket, SD_SEND);
         return 1;
@@ -34,7 +35,6 @@ int recibirMensaje(SOCKET ClientSocket,char* rec){
 int enviarMensaje(SOCKET ClientSocket,char* message){
     int iSendResult = send(ClientSocket, message, DEFAULT_BUFLEN, 0);
     if (iSendResult == SOCKET_ERROR) {
-        printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(ClientSocket);
         return 1;
     }
@@ -133,7 +133,7 @@ int connectionHandler(SOCKET ClientSocket){
     }
 }
 
-_Noreturn int iniciarServer()
+int iniciarServer()
 {
 
     for(int i=0;i<MAX_CLIENTS;i++){
@@ -202,7 +202,7 @@ _Noreturn int iniciarServer()
 
 
     // Accept a client socket
-    while(1) {
+    while(!terminate) {
         pthread_t thread_id;
         ClientSocket = accept(ListenSocket, NULL, NULL);
         pthread_create(&thread_id, NULL, (void *(*)(void *)) connectionHandler(ClientSocket), NULL);

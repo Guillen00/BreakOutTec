@@ -4,22 +4,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <string.h>
 #include "estructuras.h"
 #include "parser.h"
 #include "constants.h"
 #include "socket.h"
-
-struct juego juego={NULL,.vidas=vidaInicial,vidaInicial,1,0,NULL,0,1,
+#include "interaccion.h"
+struct juego juego={NULL,.vidas=vidaInicial,vidaInicial,1,0,numCol,NULL,0,1,
                     velocidadInicial,raquetaTamanoInicial,puntajeVerdeInicial,puntajeAmarilloInicial,
                     puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
                     probRaqDobleinicial,probVelMasinicial,probVelMenosinicial,
                     probVidaInicial,probBalonInicial};
 
+int terminate=0;
+
+void liberarListasIntermedio(){
+    liberarLista(juego.coordenadasList);
+    for(int i=0;i<numFilas;i++) {
+        liberarLista(&juego.listas[i]);
+    }
+}
+
 void nuevasListas(){
-    struct lista* actual=juego.listas;
     for(int i=0;i<8;i++){
-        *actual=*crearFila(i/2, &juego);
-        actual++;
+        juego.listas[i]=*crearFila(i/2, &juego);
     }
 }
 
@@ -60,12 +68,14 @@ void ladrilloDestruido(struct ladrillo* ladrillo){
     ladrillo->destruido=true;
     if(ladrillo->velocidadMas){
         juego.velocidad*=1.3;
-    }else if(ladrillo->velocidadMenos){
+    }
+    if(ladrillo->velocidadMenos){
         juego.velocidad/=1.3;
     }
     if(ladrillo->raquetaDoble){
         juego.raquetaTamano*=2;
-    }else if(ladrillo->raquetaMitad){
+    }
+    if(ladrillo->raquetaMitad){
         juego.raquetaTamano/=2;
     }
     if(ladrillo->vida){
@@ -81,7 +91,8 @@ void ladrilloDestruido(struct ladrillo* ladrillo){
 }
 
 void reiniciarJuego(){
-    juego=(struct juego){NULL,.vidas=vidaInicial,vidaInicial,1,0,
+    liberarListasIntermedio();
+    juego=(struct juego){NULL,.vidas=vidaInicial,vidaInicial,1,0,numCol,
             (struct lista*){NULL},0,1,
            velocidadInicial,raquetaTamanoInicial,puntajeVerdeInicial,puntajeAmarilloInicial,
            puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
@@ -93,6 +104,7 @@ void reiniciarJuego(){
 
 
 void aumentarNivel(){
+    liberarListasIntermedio();
     algoritmoDeCambioExponencial();
     nuevasListas();
     iniciarCoordenadas();
@@ -145,18 +157,137 @@ void actualizarJuego(char* texto){
     }
 }
 
-_Noreturn void iniciar(){
+void checkearLadrillosAdministradorA(char* setget, int* exito, bool setCorrecto, char* texto,
+                                                int valorNuevo, bool *valor, bool* valorOpuesto){
+    if (strcmp(setget, "set") == 0) {
+        if (setCorrecto) {
+            *valor = valorNuevo;
+            if (valorNuevo) {
+                *valorOpuesto = 0;
+            }
+            *exito = true;
+        }
+    } else {
+        printf(*valor ? "%s: true\n" : "%s: false\n",texto);
+        *exito = true;
+    }
+}
+
+void checkearPuntajesAdministrador(char* setget, int number, int* exito, char* texto, int* valor){
+    if(strcmp(setget,"set")==0) {
+        if(number>0){
+            *valor = number;
+            *exito=true;
+        }
+    }else{
+        printf("%s: %d\n",texto,*valor);
+        *exito=true;
+    }
+}
+
+void actualizacionDeAdministrador(){
+    char comando[COMMAND_LEN];
+    char* token;
+    getComando(comando);
+    char* setget=strtok(comando, " ");
+    token=strtok(NULL, " ");
+    int exito=false;
+    if(token!=NULL && setget!=NULL) {
+        if (strcmp(setget, "set") == 0 || strcmp(setget, "get") == 0) {
+            if (strcmp(token, "puntuacion") == 0) {
+                token = strtok(NULL, " ");
+                int number = atoi(strtok(NULL, " "));
+                if (strcmp(token, "verde") == 0) {
+                    checkearPuntajesAdministrador(setget, number, &exito, "Puntaje Verde", &juego.puntajeVerde);
+                } else if (strcmp(token, "amarillo") == 0) {
+                    checkearPuntajesAdministrador(setget, number, &exito, "Puntaje Amarillo", &juego.puntajeAmarillo);
+                } else if (strcmp(token, "naranja") == 0) {
+                    checkearPuntajesAdministrador(setget, number, &exito, "Puntaje Naranja", &juego.puntajeNaranja);
+                } else if (strcmp(token, "rojo") == 0) {
+                    checkearPuntajesAdministrador(setget, number, &exito, "Puntaje Rojo", &juego.puntajeRojo);
+                }
+            } else if (strcmp(token, "ladrillo") == 0) {
+                int number1 = atoi(strtok(NULL, " "));
+                int number2 = atoi(strtok(NULL, " "));
+
+                token = strtok(NULL, " ");
+                char *booleano = strtok(NULL, " ");
+                bool numericosCorrectos = number1 > 0 && number2 > 0 && number1 < 9 && number2 < (juego.numeroCol + 1);
+
+                if (numericosCorrectos && token != NULL) {
+                    struct ladrillo *ladrillo = ((struct ladrillo *) obtenerValor(&juego.listas[number1 - 1],
+                                                                                  number2 - 1));
+
+                    bool valor;
+                    bool setCorrecto = false;
+
+                    if (booleano != NULL) {
+                        valor = (strcmp(booleano, "true") == 0);
+                        setCorrecto = (strcmp(booleano, "true") == 0 || strcmp(booleano, "false") == 0);
+                    }
+                    if (strcmp(token, "raquetaDoble") == 0) {
+                        checkearLadrillosAdministradorA(setget, &exito, setCorrecto, "Raqueta Doble",
+                                                        valor, &ladrillo->raquetaDoble, &ladrillo->raquetaMitad);
+                    } else if (strcmp(token, "raquetaMitad") == 0) {
+                        checkearLadrillosAdministradorA(setget, &exito, setCorrecto, "Raqueta Mitad",
+                                                        valor, &ladrillo->raquetaMitad, &ladrillo->raquetaDoble);
+                    } else if (strcmp(token, "velocidadMas") == 0) {
+                        checkearLadrillosAdministradorA(setget, &exito, setCorrecto, "Velocidad Mas",
+                                                        valor, &ladrillo->velocidadMas, &ladrillo->velocidadMenos);
+                    } else if (strcmp(token, "velocidadMenos") == 0) {
+                        checkearLadrillosAdministradorA(setget, &exito, setCorrecto, "Velocidad Menos",
+                                                        valor, &ladrillo->velocidadMenos, &ladrillo->velocidadMas);
+                    } else if (strcmp(token, "vida") == 0) {
+                        if (strcmp(setget, "set") == 0) {
+                            if (setCorrecto) {
+                                ladrillo->vida = valor;
+                                exito = true;
+                            }
+                        } else {
+                            printf(ladrillo->vida ? "Vida: true\n" : "Vida: false\n");
+                            exito = true;
+                        }
+                    } else if (strcmp(token, "balon") == 0) {
+                        if (strcmp(setget, "set") == 0) {
+                            if (setCorrecto) {
+                                ladrillo->balon = valor;
+                                exito = true;
+                            }
+                        } else {
+                            printf(ladrillo->balon ? "Balon: true\n" : "Balon: false\n");
+                            exito = true;
+                        }
+                    }
+                }
+            }
+        }
+    }else if (setget!=NULL){
+        if(strcmp(setget, "none") == 0) {
+            exito = true;
+        }else if(strcmp(setget, "exit") == 0){
+            printf("\n\nTerminando ejecucion...\n\nHasta pronto vaquer@\n");
+            terminate=true;
+            exito = true;
+        }
+    }
+    if(!exito){
+        printf("Error en la entrada\n");
+    }
+}
+
+void iniciar(){
     nuevasListas();
     iniciarCoordenadas();
     pthread_t thread_id;
     pthread_create(&thread_id, NULL, (void *(*)(void *)) iniciarServer, NULL);
-
-    bool flag=true;
     char texto[DEFAULT_BUFLEN];
     for(int i=0;i<DEFAULT_BUFLEN;i++){
         texto[i]='\0';
     }
-    while(flag){
+    iniciarInteraccion();
+    while(!terminate){
         actualizarJuego(texto);
+        actualizacionDeAdministrador();
     }
+    liberarListasIntermedio();
 }

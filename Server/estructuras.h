@@ -40,6 +40,7 @@ struct juego{
     int vidaAnterior;
     int nivel;
     int posicionRaqX;
+    int numeroCol;
     struct lista* coordenadasList;
     int puntaje;
     int balones;
@@ -64,10 +65,12 @@ struct juego{
 
 void agregarNodo(struct lista* lista, void* data);
 void* obtenerSiguiente(void* anterior, struct lista* lista);
-struct nodo* obtenerNodo(struct lista* lista, int pos);
+void* obtenerValor(struct lista* lista, int pos);
 struct ladrillo* crearLadrillo(int color, struct juego* juego);
 struct lista* crearFila(int color, struct juego* juego);
 struct ladrillo* obtenerLadrilloDestruido(int matriz[numFilas][numCol], struct lista listas[numFilas] );
 void borrarUltimo(struct lista* lista);
 bool quedanLadrillos(struct lista listas[numFilas]);
+void liberarLista(struct lista* lista);
+
 #endif //SERVER_ESTRUCTURAS_H

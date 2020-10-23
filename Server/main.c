@@ -11,10 +11,5 @@ int main() {
 
     iniciar();
 
-
-    pthread_t thread_id;
-    pthread_create(&thread_id, NULL, (void *(*)(void *)) iniciarServer(), NULL );
-
-    printf("w");
     return 0;
 }

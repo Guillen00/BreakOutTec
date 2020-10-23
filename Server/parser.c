@@ -62,6 +62,8 @@ int juegoToChar(char* texto,struct juego* juego){
     index+=calcularLongitudAsString(juego->posicionRaqX);
     sprintf(index, "%d;",juego->balones);
     index+=calcularLongitudAsString(juego->balones);
+    sprintf(index, "%d;",juego->numeroCol);
+    index+=calcularLongitudAsString(juego->numeroCol);
     sprintf(index, "%d;",juego->nivel);
     index+=calcularLongitudAsString(juego->nivel);
     sprintf(index, "%d;",juego->raquetaTamano);

@@ -9,7 +9,7 @@ void actualizarListas();
 void algoritmoDeCambioExponencial();
 void aumentarNivel();
 
-_Noreturn void iniciar();
+ void iniciar();
 void reiniciarJuego();
 
 #endif //SERVER_JUEGO_H

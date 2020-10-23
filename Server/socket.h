@@ -12,6 +12,6 @@
 int recibirDatos(char* datos);
 void enviarDatos(char* datos);
 int isJugadorActivo();
-_Noreturn int iniciarServer();
+int iniciarServer();
 
 #endif //SERVER_SOCKET_H
