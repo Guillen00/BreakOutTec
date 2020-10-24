@@ -15,7 +15,10 @@ import javax.swing.ImageIcon;
 public class Raqueta extends Animacion{
     private Integer dx = 0;
     private Integer largo = 10;//Introducir valor adecuado con la interfaz
-
+    public static  Integer LARGORAQUETA = 60;
+    public static Integer ANCHORAQUETA = 20;
+    public static Integer velocidad =1;
+    
     public Integer getLargo() {
         return largo;
     }
@@ -42,7 +45,7 @@ public class Raqueta extends Animacion{
     private void initPaddle() {
 
         loadImage();
-        getImageDimensions();
+        getImageDimensionsPaddle();
 
         resetState();
     }
@@ -58,14 +61,14 @@ public class Raqueta extends Animacion{
         x += dx;
         //x += dx;
         
-        if (x <= 0) {
+        if (x < 0) {
 
             x = 0;
         }
 
-        if (x >= Variables.WIDTH - imageWidth) {
+        if (x > Variables.WIDTH - LARGORAQUETA) {
 
-            x = Variables.WIDTH - imageWidth;
+            x = Variables.WIDTH - LARGORAQUETA;
         }
     }
 
@@ -75,12 +78,12 @@ public class Raqueta extends Animacion{
 
         if (key == KeyEvent.VK_LEFT) {
 
-            dx = -1;
+            dx = -velocidad;
         }
 
         if (key == KeyEvent.VK_RIGHT) {
 
-            dx = 1;
+            dx = velocidad;
         }
     }
 

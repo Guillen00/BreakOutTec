@@ -15,7 +15,8 @@ public class Bola extends Animacion{
     
     private Integer posX = null;
     private Integer posY = null;
-    private Integer velocidad = null;
+    public static Integer velocidad = 1;
+    
 
     public Integer getPosX() {
         return posX;
@@ -90,8 +91,8 @@ public class Bola extends Animacion{
     }
 */
     
-    private int xdir;
-    private int ydir;
+    private Integer xdir;
+    private Integer ydir;
 
     public Bola() {
 
@@ -100,11 +101,11 @@ public class Bola extends Animacion{
 
     private void initBall() {
 
-        xdir = 1;
-        ydir = -1;
+        xdir = velocidad;
+        ydir = -velocidad;
 
         loadImage();
-        getImageDimensions();
+        getImageDimensionsBall();
         resetState();
     }
 
@@ -119,20 +120,20 @@ public class Bola extends Animacion{
         x += xdir;
         y += ydir;
 
-        if (x == 0) {
+        if (x < 0) {
 
-            setXDir(1);
+            setXDir(velocidad);
         }
 
-        if (x == Variables.WIDTH - imageWidth) {
+        if (x > Variables.WIDTH - imageWidth) {
 
             System.out.println(imageWidth);
-            setXDir(-1);
+            setXDir(-velocidad);
         }
 
-        if (y == 0) {
+        if (y < 0) {
 
-            setYDir(1);
+            setYDir(velocidad);
         }
     }
 

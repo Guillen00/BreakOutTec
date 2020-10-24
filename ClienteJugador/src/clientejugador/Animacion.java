@@ -19,7 +19,7 @@ public class Animacion {
     Integer imageHeight;
     Image image;
 
-    protected void setX(int x) {
+    protected void setX(Integer x) {
 
         this.x = x;
     }
@@ -29,7 +29,7 @@ public class Animacion {
         return x;
     }
 
-    protected void setY(int y) {
+    protected void setY(Integer y) {
 
         this.y = y;
     }
@@ -54,15 +54,36 @@ public class Animacion {
         return image;
     }
 
-    Rectangle getRect() {
+    Rectangle getRectPaddle() {
+
+        return new Rectangle(x, y,
+                 Raqueta.LARGORAQUETA , Raqueta.ANCHORAQUETA);
+    }
+    Rectangle getRectBall() {
+
+        return new Rectangle(x, y,
+                image.getWidth(null), image.getHeight(null));
+    }
+    Rectangle getRectBrick() {
 
         return new Rectangle(x, y,
                 image.getWidth(null), image.getHeight(null));
     }
 
-    void getImageDimensions() {
+    void getImageDimensionsPaddle() {
+
+        imageWidth =  Raqueta.ANCHORAQUETA;
+        imageHeight = Raqueta.LARGORAQUETA;
+    }
+    
+    void getImageDimensionsBall() {
 
         imageWidth = image.getWidth(null);
         imageHeight = image.getHeight(null);
+    }
+    void getImageDimensionsBrick() {
+
+        imageWidth = 60;
+        imageHeight = 18;
     }
 }

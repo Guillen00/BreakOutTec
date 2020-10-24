@@ -10,14 +10,15 @@ package clientejugador;
  * @author leona
  */
 public interface Variables {
-    int WIDTH = 1050;
-    int HEIGHT = 700;
-    int BOTTOM_EDGE = 700;
-    int N_OF_BRICKS = 96;
-    int INIT_PADDLE_X = 475;
-    int INIT_PADDLE_Y = 680;
-    int INIT_BALL_X = 495;
-    int INIT_BALL_Y = 635;
-    int PERIOD = 10;
+    Integer WIDTH = 1050;
+    Integer HEIGHT = 700;
+    Integer BOTTOM_EDGE = 800;
+    Integer N_OF_BRICKS = 96;
+    Integer INIT_PADDLE_X = 475;
+    Integer INIT_PADDLE_Y = 680;
+    Integer INIT_BALL_X = 495;
+    Integer INIT_BALL_Y = 635;
+    Integer PERIOD = 10;
+    
 }
 

@@ -81,12 +81,12 @@ public class Ladrillo extends Animacion{
     }
     
 
-    public Ladrillo(int x, int y) {
+    public Ladrillo(Integer x, Integer y) {
 
         initLadrillo(x, y);
     }
 
-    private void initLadrillo(int x, int y) {
+    private void initLadrillo(Integer x, Integer y) {
 
         this.x = x;
         this.y = y;
@@ -94,7 +94,7 @@ public class Ladrillo extends Animacion{
         destroyed = false;
 
         loadImage();
-        getImageDimensions();
+        getImageDimensionsBrick();
     }
 
     private void loadImage() {
@@ -108,7 +108,7 @@ public class Ladrillo extends Animacion{
         return destroyed;
     }
 
-    void setDestroyed(boolean val) {
+    void setDestroyed1(Boolean val) {
 
         destroyed = val;
     }

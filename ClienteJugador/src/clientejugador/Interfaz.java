@@ -31,16 +31,19 @@ public class Interfaz extends JPanel {
     private Timer timer;
     private String message = "Game Over";
     private Bola ball;
+    private Bola ball2;
     private Raqueta paddle;
     private Ladrillo[] bricks;
-    private int vidas = 3;
+    private Integer vidas = 3;
     private String vida = "";
-    private int niveles = 1;
+    private Integer niveles = 1;
     private String nivel = "";
-    private int Puntaje = 0;
+    private Integer Puntaje = 0;
     private String puntaje = "";
-    private int Record = 0;
+    private Integer Record = 0;
     private String record = "";
+    private Boolean PowerBall = false;
+    
     
     public Interfaz() {
 
@@ -62,11 +65,12 @@ public class Interfaz extends JPanel {
         bricks = new Ladrillo[Variables.N_OF_BRICKS];
         ball = new Bola();
         paddle = new Raqueta();
-        int k = 0;
+        ball2 = new Bola();
+        Integer k = 0;
 
-        for (int i = 0; i < 8; i++) {
+        for (Integer i = 0; i < 8; i++) {
 
-            for (int j = 0; j < 12; j++) {
+            for (Integer j = 0; j < 12; j++) {
 
                 bricks[k] = new Ladrillo(j * 70 + 110, i * 30 + 50);
                 k++;
@@ -93,6 +97,8 @@ public class Interfaz extends JPanel {
         if (vidas>0) {
 
             drawObjects(g2d);
+            drawPaddle(g2d);
+            drawBall(g2d);
         } else {
             timer.stop();
             gameFinished(g2d);
@@ -102,10 +108,9 @@ public class Interfaz extends JPanel {
     }
 
     private void drawObjects(Graphics2D g2d) {
-        g2d.drawImage(ball.getImage(), ball.getX(), ball.getY(),
-                ball.getImageWidth(), ball.getImageHeight(), this);
-        g2d.drawImage(paddle.getImage(), paddle.getX(), paddle.getY(),
-                paddle.getImageWidth(), paddle.getImageHeight(), this);
+        
+        //g2d.drawImage(paddle.getImage(), paddle.getX(), paddle.getY(),
+        //        (paddle.getImageWidth())/2, (paddle.getImageHeight())/2, this);
         g2d.drawRect(0, 0, 1050, 800);
         Font font = new Font("Verdana", Font.BOLD, 18);
         g2d.setColor(Color.WHITE);
@@ -123,7 +128,7 @@ public class Interfaz extends JPanel {
         record = ""+ Record;
         g2d.drawString(record,1200,150);
 
-        for (int i = 0; i < Variables.N_OF_BRICKS; i++) {
+        for (Integer i = 0; i < Variables.N_OF_BRICKS; i++) {
 
             if (!bricks[i].isDestroyed()) {
 
@@ -161,21 +166,44 @@ public class Interfaz extends JPanel {
         g2d.drawString(message, 400,350);
     }
     
-    
+    private void drawPaddle(Graphics2D g2d) {
+        g2d.drawImage(paddle.getImage(), paddle.getX(), paddle.getY(),
+                Raqueta.LARGORAQUETA, Raqueta.ANCHORAQUETA, this);
+    }
+    public Integer interruptor1=0;
+     private void drawBall(Graphics2D g2d) {
+         g2d.drawImage(ball.getImage(), ball.getX(), ball.getY(),
+                ball.getImageWidth(), ball.getImageHeight(), this);
+         if(PowerBall){
+             if(interruptor1 == 0){
+             ball = new Bola();
+             interruptor1=1;}
+             //ball2 =new Bola();
+             g2d.drawImage(ball2.getImage(), ball2.getX(), ball2.getY(),
+                ball2.getImageWidth(), ball2.getImageHeight(), this);
+         }
+
+     }
+     
      private class GameCycle implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
 
             doGameCycle();
+            
         }
     }
-
+    
     private void doGameCycle() {
-
         ball.move();
         paddle.move();
-        checkCollision();
+        checkCollision(ball);
+        if(PowerBall){
+            ball2.move();
+            checkCollision(ball2);
+        }
+        
         repaint();
     }
 
@@ -185,9 +213,9 @@ public class Interfaz extends JPanel {
         timer.stop();
     }
 
-    private void checkCollision() {
+    private void checkCollision(Bola ball) {
 
-        if (ball.getRect().getMaxY() > Variables.BOTTOM_EDGE) {
+        if (ball.getRectBall().getMaxY() > Variables.BOTTOM_EDGE) {
             if (vidas>0){
                 vidas--;
                 ball = new Bola();
@@ -198,7 +226,7 @@ public class Interfaz extends JPanel {
             
         }
 
-        for (int i = 0, j = 0; i < Variables.N_OF_BRICKS; i++) {
+        for (Integer i = 0, j = 0; i < Variables.N_OF_BRICKS; i++) {
 
             if (bricks[i].isDestroyed()) {
 
@@ -212,55 +240,55 @@ public class Interfaz extends JPanel {
             }
         }
 
-        if ((ball.getRect()).intersects(paddle.getRect())) {
+        if ((ball.getRectBall()).intersects(paddle.getRectPaddle())) {
 
-            int paddleLPos = (int) paddle.getRect().getMinX();
-            int ballLPos = (int) ball.getRect().getMinX();
+            Integer paddleLPos = (int) paddle.getRectPaddle().getMinX();
+            Integer ballLPos = (int) ball.getRectBall().getMinX();
 
-            int first = paddleLPos + 8;
-            int second = paddleLPos + 16;
-            int third = paddleLPos + 24;
-            int fourth = paddleLPos + 32;
+            Integer first = paddleLPos + 8;
+            Integer second = paddleLPos + 16;
+            Integer third = paddleLPos + 24;
+            Integer fourth = paddleLPos + 32;
 
             if (ballLPos < first) {
 
-                ball.setXDir(-1);
-                ball.setYDir(-1);
+                ball.setXDir(-Bola.velocidad);
+                ball.setYDir(-Bola.velocidad);
             }
 
             if (ballLPos >= first && ballLPos < second) {
 
-                ball.setXDir(-1);
-                ball.setYDir(-1 * ball.getYDir());
+                ball.setXDir(-Bola.velocidad);
+                ball.setYDir(-Bola.velocidad * ball.getYDir());
             }
 
             if (ballLPos >= second && ballLPos < third) {
 
                 ball.setXDir(0);
-                ball.setYDir(-1);
+                ball.setYDir(-Bola.velocidad);
             }
 
             if (ballLPos >= third && ballLPos < fourth) {
 
-                ball.setXDir(1);
-                ball.setYDir(-1 * ball.getYDir());
+                ball.setXDir(Bola.velocidad);
+                ball.setYDir(-Bola.velocidad * ball.getYDir());
             }
 
             if (ballLPos > fourth) {
 
-                ball.setXDir(1);
-                ball.setYDir(-1);
+                ball.setXDir(Bola.velocidad);
+                ball.setYDir(-Bola.velocidad);
             }
         }
 
-        for (int i = 0; i < Variables.N_OF_BRICKS; i++) {
+        for (Integer i = 0; i < Variables.N_OF_BRICKS; i++) {
 
-            if ((ball.getRect()).intersects(bricks[i].getRect())) {
+            if ((ball.getRectBall()).intersects(bricks[i].getRectBrick())) {
 
-                int ballLeft = (int) ball.getRect().getMinX();
-                int ballHeight = (int) ball.getRect().getHeight();
-                int ballWidth = (int) ball.getRect().getWidth();
-                int ballTop = (int) ball.getRect().getMinY();
+                Integer ballLeft = (int) ball.getRectBall().getMinX();
+                Integer ballHeight = (int) ball.getRectBall().getHeight();
+                Integer ballWidth = (int) ball.getRectBall().getWidth();
+                Integer ballTop = (int) ball.getRectBall().getMinY();
 
                 Point pointRight = new Point(ballLeft + ballWidth + 1, ballTop);
                 Point pointLeft = new Point(ballLeft - 1, ballTop);
@@ -269,23 +297,27 @@ public class Interfaz extends JPanel {
 
                 if (!bricks[i].isDestroyed()) {
 
-                    if (bricks[i].getRect().contains(pointRight)) {
+                    if (bricks[i].getRectBrick().contains(pointRight)) {
 
-                        ball.setXDir(-1);
-                    } else if (bricks[i].getRect().contains(pointLeft)) {
+                        ball.setXDir(-Bola.velocidad);
+                    } else if (bricks[i].getRectBrick().contains(pointLeft)) {
 
-                        ball.setXDir(1);
+                        ball.setXDir(Bola.velocidad);
                     }
 
-                    if (bricks[i].getRect().contains(pointTop)) {
+                    if (bricks[i].getRectBrick().contains(pointTop)) {
 
-                        ball.setYDir(1);
-                    } else if (bricks[i].getRect().contains(pointBottom)) {
+                        ball.setYDir(Bola.velocidad);
+                    } else if (bricks[i].getRectBrick().contains(pointBottom)) {
 
-                        ball.setYDir(-1);
+                        ball.setYDir(-Bola.velocidad);
                     }
 
-                    bricks[i].setDestroyed(true);
+                    bricks[i].setDestroyed1(true);
+                    Raqueta.LARGORAQUETA += 10;
+                    //Bola.velocidad +=1;
+                    Raqueta.velocidad +=1;
+                    PowerBall = true;
                 }
             }
         }
