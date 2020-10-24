@@ -33,7 +33,7 @@ int recibirMensaje(SOCKET ClientSocket,char* rec){
 }
 
 int enviarMensaje(SOCKET ClientSocket,char* message){
-    int iSendResult = send(ClientSocket, message, DEFAULT_BUFLEN, 0);
+    int iSendResult = send(ClientSocket, message, strlen(message)+1, 0);
     if (iSendResult == SOCKET_ERROR) {
         closesocket(ClientSocket);
         return 1;
