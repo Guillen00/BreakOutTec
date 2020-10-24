@@ -288,6 +288,7 @@ public class Interfaz extends JPanel {
                 ball.setXDir(Bola.velocidad);
                 ball.setYDir(-Bola.velocidad);
             }
+            
         }
 
         for (Integer i = 0; i < Variables.N_OF_BRICKS; i++) {
