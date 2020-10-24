@@ -209,7 +209,7 @@ public class Interfaz extends JPanel {
         }
         
         repaint();
-        
+         
     }
 
     private void stopGame() {
