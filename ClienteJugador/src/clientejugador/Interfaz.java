@@ -35,13 +35,13 @@ public class Interfaz extends JPanel {
     private Bola ball2;
     private Raqueta paddle;
     private Ladrillo[] bricks;
-    private Integer vidas = 3;
+    static Integer vidas = 3;
     private String vida = "";
-    private Integer niveles = 1;
+    public static Integer niveles = 1;
     private String nivel = "";
-    private Integer Puntaje = 0;
+    static Integer Puntaje = 0;
     private String puntaje = "";
-    private Integer Record = 0;
+    static Integer Record = 0;
     private String record = "";
     private Boolean PowerBall = false;
     public Client client = new Client("127.0.0.1", 27015);
@@ -201,6 +201,7 @@ public class Interfaz extends JPanel {
     private void doGameCycle() {
         String entrada = client.getMessage();
         Parser_mensaje.parser(entrada);
+        Parser_mensaje.Update_Everything_Back();
         
         ball.move();
         paddle.move();
@@ -211,6 +212,7 @@ public class Interfaz extends JPanel {
         }
         
         repaint();
+        Parser_mensaje.Update_Everything();
         String salida = Parser_mensaje.toString();
         client.sendMessage(salida);
         

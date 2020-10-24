@@ -55,7 +55,7 @@ public class Parser{
     public List<Integer> getPosY() {
         return posY;
     }
-
+/*
     public Integer getVidas() {
         return vidas;
     }
@@ -87,11 +87,30 @@ public class Parser{
     public Integer getPuntaje() {
         return puntaje;
     }
-
+    */
     public List<List<String>> getMatriz() {
         return Matriz;
     }
 
+    public void Update_Everything(){
+    vidas = Interfaz.vidas;
+    posicionRaqX = Raqueta.posX;
+    //balones;
+    nivel = Interfaz.niveles;
+    raquetaTamano = Raqueta.LARGORAQUETA;
+    velocidad = Bola.velocidad;
+    puntaje = Interfaz.Puntaje;
+    }
+    
+    public void Update_Everything_Back(){
+    Interfaz.vidas = vidas ;
+    Raqueta.posX = posicionRaqX;
+    //balones;
+    Interfaz.niveles = nivel ;
+    Raqueta.LARGORAQUETA = raquetaTamano ;
+    Bola.velocidad = velocidad ;
+    Interfaz.Puntaje = puntaje;
+    }
 
     public void parser(String texto){
         String[] aux =texto.split("\n")[0].split(";");

@@ -18,6 +18,7 @@ public class Raqueta extends Animacion{
     public static  Integer LARGORAQUETA = 60;
     public static Integer ANCHORAQUETA = 20;
     public static Integer velocidad =1;
+    public static Integer posX =0 ;
     
     public Integer getLargo() {
         return largo;
@@ -70,6 +71,7 @@ public class Raqueta extends Animacion{
 
             x = Variables.WIDTH - LARGORAQUETA;
         }
+        posX=x;
     }
 
     void keyPressed(KeyEvent e) {

@@ -9,54 +9,18 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author Usuario
+ * @author Usuario 
  */
 public class Bola extends Animacion{
-    
+    public Parser parser = new Parser();
     private Integer posX = null;
     private Integer posY = null;
     public static Integer velocidad = 1;
     
-
-    public Integer getPosX() {
-        return posX;
-    }
-
-    public void setPosX(Integer posX) {
-        this.posX = posX;
-    }
-
-    public Integer getPosY() {
-        return posY;
-    }
-
-    public void setPosY(Integer posY) {
-        this.posY = posY;
-    }
     
-    public void sumarY(Integer velocidad){
-        this.posY = this.posY + velocidad;
-    } 
     
-    public void sumarX(Integer velocidad){
-        this.posX = this.posX + velocidad;
-    }
-
-    public Integer getVelocidad() {
-        return velocidad;
-    }
-
-    public void setVelocidad(Integer velocidad) {
-        this.velocidad = velocidad;
-    }
     
-    public void doblarVelovidad(){
-        setVelocidad(getVelocidad()*2);
-    }
-    
-    public void reducirVelocidad(){
-        setVelocidad(getVelocidad()/2);
-    }
+   
     /*
     public void movimiento(Integer largo,Integer alto){
 
