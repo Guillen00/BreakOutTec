@@ -19,11 +19,11 @@ public class Client
 
     public Client(String address, int port)
     {
+
         //Inicia el Socket
         try
         {
             socket = new Socket(address, port);
-            System.out.println("Connected");
 
             out = new PrintStream( socket.getOutputStream() );
             in = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
@@ -39,14 +39,14 @@ public class Client
     }
 
     public String getMessage(){
-        String updade=null;
+        String update=null;
         try{
-            updade=read();
+            update=read();
         }catch(IOException u){
             System.out.println(u);
             closeConnection();
         }
-        return updade;
+        return update;
     }
 
     public void sendMessage(String Message){

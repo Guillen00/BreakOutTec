@@ -103,6 +103,11 @@ public class Parser{
         raquetaTamano = Integer.parseInt(aux[5]);
         velocidad = Integer.parseInt(aux[6]);
         puntaje = Integer.parseInt(aux[7]);
+
+        posX.clear();
+        posY.clear();
+        Matriz.clear();
+
         for (String dato:texto.split("\n")[1].split(";")){
             if(posY.size()==posX.size()){
                 posX.add(Integer.parseInt(dato));
@@ -110,6 +115,15 @@ public class Parser{
                 posY.add(Integer.parseInt(dato));
             }
         }
+        Fila0.clear();
+        Fila1.clear();
+        Fila2.clear();
+        Fila3.clear();
+        Fila4.clear();
+        Fila5.clear();
+        Fila6.clear();
+        Fila7.clear();
+
         insertarEnFila(Fila7,texto.split("\n")[2]);
         insertarEnFila(Fila6,texto.split("\n")[3]);
         insertarEnFila(Fila5,texto.split("\n")[4]);
