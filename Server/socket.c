@@ -1,7 +1,6 @@
 #undef UNICODE
 
 #define WIN32_LEAN_AND_MEAN
-#include <pthread.h>
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -103,9 +102,10 @@ int asignarEspectador(SOCKET ClientSocket, char* message){
     }
 }
 
-int connectionHandler(SOCKET ClientSocket){
+DWORD WINAPI connectionHandler(LPVOID Param){
     char rec[DEFAULT_BUFLEN];
     char message[DEFAULT_BUFLEN];
+    int ClientSocket=(int)Param;
     if (ClientSocket == INVALID_SOCKET) {
         printf("accept failed with error: %d\n", WSAGetLastError());
         return 1;
@@ -203,9 +203,9 @@ int iniciarServer()
 
     // Accept a client socket
     while(!terminate) {
-        pthread_t thread_id;
+        DWORD ThreadId;
         ClientSocket = accept(ListenSocket, NULL, NULL);
-        pthread_create(&thread_id, NULL, (void *(*)(void *)) connectionHandler(ClientSocket), NULL);
+        CreateThread(NULL, 0, connectionHandler, (LPVOID) ClientSocket, 0, &ThreadId);
     }
     return 0;
 }

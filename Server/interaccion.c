@@ -2,7 +2,7 @@
 // Created by alfab on 10/22/2020.
 //
 #include <stdio.h>
-#include <pthread.h>
+#include "windows.h"
 #include "estructuras.h"
 #include <unistd.h>
 #include "interaccion.h"
@@ -12,7 +12,7 @@ bool procesandoComando=false;
 extern int terminate;
 
 
-void updateInstruction(){
+DWORD WINAPI updateInstruction(){
     while(!terminate) {
         if(!procesandoComando) {
             printf("\ncomando:");
@@ -47,6 +47,7 @@ void iniciarInteraccion(){
     printf("Bienvenid@, administrad@r\n\n    Se ha iniciado el servidor\n");
     printf("    Se ha habilitado la linea de comandos\n");
     cleanBuffer();
-    pthread_t thread_id;
-    pthread_create(&thread_id, NULL, (void *(*)(void *)) updateInstruction, NULL);
+
+    DWORD ThreadId;
+    CreateThread(NULL, 0,  updateInstruction, NULL, 0, &ThreadId);
 }
