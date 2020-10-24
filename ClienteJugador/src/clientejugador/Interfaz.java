@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+
 public class Interfaz extends JPanel {
     
     private Timer timer;
@@ -43,10 +44,11 @@ public class Interfaz extends JPanel {
     private Integer Record = 0;
     private String record = "";
     private Boolean PowerBall = false;
-    
+    public Client client = new Client("127.0.0.1", 27015);
     
     public Interfaz() {
-
+        
+        
         initBoard();
     }
 
@@ -196,6 +198,8 @@ public class Interfaz extends JPanel {
     }
     
     private void doGameCycle() {
+        String result = client.getMessage();
+        
         ball.move();
         paddle.move();
         checkCollision(ball);
@@ -205,6 +209,7 @@ public class Interfaz extends JPanel {
         }
         
         repaint();
+        
     }
 
     private void stopGame() {
