@@ -45,6 +45,7 @@ public class Interfaz extends JPanel {
     private String record = "";
     private Boolean PowerBall = false;
     public Client client = new Client("127.0.0.1", 27015);
+    public Parser Parser_mensaje = new Parser();
     
     public Interfaz() {
         
@@ -198,7 +199,8 @@ public class Interfaz extends JPanel {
     }
     
     private void doGameCycle() {
-        String result = client.getMessage();
+        String entrada = client.getMessage();
+        Parser_mensaje.parser(entrada);
         
         ball.move();
         paddle.move();
@@ -209,7 +211,9 @@ public class Interfaz extends JPanel {
         }
         
         repaint();
-         
+        String salida = Parser_mensaje.toString();
+        client.sendMessage(salida);
+        
     }
 
     private void stopGame() {
