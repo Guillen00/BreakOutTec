@@ -7,8 +7,6 @@
 int main() {
     srand (time(NULL));
     srand (getpid());
-
     iniciar();
-
     return 0;
 }
