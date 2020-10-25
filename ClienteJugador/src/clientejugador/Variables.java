@@ -11,7 +11,7 @@ package clientejugador;
  */
 public interface Variables {
     Integer WIDTH = 1050;
-    Integer HEIGHT = 700;
+    Integer HEIGHT = 800;
     Integer BOTTOM_EDGE = 800;
     Integer N_OF_BRICKS = 96;
     Integer INIT_PADDLE_X = 475;

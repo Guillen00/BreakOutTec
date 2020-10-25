@@ -47,6 +47,9 @@ public class Interfaz extends JPanel {
     //public Client client = new Client("127.0.0.1", 27015);
     //public Parser Parser_mensaje = new Parser();
     
+    public static Parser Parser_mensaje = Parser.getInstance();
+    
+    
     public Interfaz() {
         
         
@@ -55,7 +58,7 @@ public class Interfaz extends JPanel {
     }
 
     private void initBoard() {
-        
+        Parser_mensaje.agregarMatriz();
         addKeyListener(new TAdapter());
         setFocusable(true);
         setPreferredSize(new Dimension(1400, 800));
@@ -209,13 +212,14 @@ public class Interfaz extends JPanel {
         */
         ball.move();
         paddle.move();
-        checkCollision(ball);
+        checkCollision();
         if(PowerBall){
             ball2.move();
-            checkCollision(ball2);
+            checkCollision2();
         }
-        /*
+        
         repaint();
+        /*
         Parser_mensaje.Update_Everything();
         String salida = Parser_mensaje.toString();
         client.sendMessage(salida);
@@ -227,8 +231,8 @@ public class Interfaz extends JPanel {
         vidas = 0;
         timer.stop();
     }
-
-    private void checkCollision(Bola ball) {
+int xnono=0;
+    private void checkCollision() {
 
         if (ball.getRectBall().getMaxY() > Variables.BOTTOM_EDGE) {
             if (vidas>0){
@@ -331,6 +335,124 @@ public class Interfaz extends JPanel {
 
                     bricks[i].setDestroyed1(true);
                     bricks[i].enviar_Matriz(bricks[i].x, bricks[i].y);
+                    //Parser_mensaje.setMatriz(2, 2);
+                    Raqueta.LARGORAQUETA += 10;
+                    //Bola.velocidad +=1;
+                    Raqueta.velocidad +=1;
+                    
+                    if(xnono == 0){
+                     PowerBall = true;
+                    xnono=1;}
+                }
+            }
+        }
+    }
+    
+     private void checkCollision2() {
+
+        if (ball2.getRectBall().getMaxY() > Variables.BOTTOM_EDGE) {
+            if (vidas>0){
+                vidas--;
+                PowerBall = false;
+                return;
+            }
+            else{
+                stopGame();
+            }
+            
+        }
+
+        for (Integer i = 0, j = 0; i < Variables.N_OF_BRICKS; i++) {
+
+            if (bricks[i].isDestroyed()) {
+
+                j++;
+            }
+
+            if (j == Variables.N_OF_BRICKS) {
+
+                message = "Victory";
+                stopGame();
+            }
+        }
+
+        if ((ball2.getRectBall()).intersects(paddle.getRectPaddle())) {
+
+            Integer paddleLPos = (int) paddle.getRectPaddle().getMinX();
+            Integer ballLPos = (int) ball2.getRectBall().getMinX();
+
+            Integer first = paddleLPos + 8;
+            Integer second = paddleLPos + 16;
+            Integer third = paddleLPos + 24;
+            Integer fourth = paddleLPos + 32;
+
+            if (ballLPos < first) {
+
+                ball2.setXDir(-Bola.velocidad);
+                ball2.setYDir(-Bola.velocidad);
+            }
+
+            if (ballLPos >= first && ballLPos < second) {
+
+                ball2.setXDir(-Bola.velocidad);
+                ball2.setYDir(-Bola.velocidad * ball2.getYDir());
+            }
+
+            if (ballLPos >= second && ballLPos < third) {
+
+                ball2.setXDir(0);
+                ball2.setYDir(-Bola.velocidad);
+            }
+
+            if (ballLPos >= third && ballLPos < fourth) {
+
+                ball2.setXDir(Bola.velocidad);
+                ball2.setYDir(-Bola.velocidad * ball.getYDir());
+            }
+
+            if (ballLPos > fourth) {
+
+                ball2.setXDir(Bola.velocidad);
+                ball2.setYDir(-Bola.velocidad);
+            }
+            
+        }
+
+        for (Integer i = 0; i < Variables.N_OF_BRICKS; i++) {
+
+            if ((ball2.getRectBall()).intersects(bricks[i].getRectBrick())) {
+
+                Integer ballLeft = (int) ball2.getRectBall().getMinX();
+                Integer ballHeight = (int) ball2.getRectBall().getHeight();
+                Integer ballWidth = (int) ball2.getRectBall().getWidth();
+                Integer ballTop = (int) ball2.getRectBall().getMinY();
+
+                Point pointRight = new Point(ballLeft + ballWidth + 1, ballTop);
+                Point pointLeft = new Point(ballLeft - 1, ballTop);
+                Point pointTop = new Point(ballLeft, ballTop - 1);
+                Point pointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
+
+                if (!bricks[i].isDestroyed()) {
+
+                    if (bricks[i].getRectBrick().contains(pointRight)) {
+
+                        ball2.setXDir(-Bola.velocidad);
+                    } else if (bricks[i].getRectBrick().contains(pointLeft)) {
+
+                        ball2.setXDir(Bola.velocidad);
+                    }
+
+                    if (bricks[i].getRectBrick().contains(pointTop)) {
+
+                        ball2.setYDir(Bola.velocidad);
+                    } else if (bricks[i].getRectBrick().contains(pointBottom)) {
+
+                        ball2.setYDir(-Bola.velocidad);
+                    }
+
+                    bricks[i].setDestroyed1(true);
+                    bricks[i].enviar_Matriz(bricks[i].x, bricks[i].y);
+                    //Parser_mensaje.setMatriz(2, 2);
                     Raqueta.LARGORAQUETA += 10;
                     //Bola.velocidad +=1;
                     Raqueta.velocidad +=1;

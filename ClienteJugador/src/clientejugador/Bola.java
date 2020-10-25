@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
  * @author Usuario 
  */
 public class Bola extends Animacion{
-    public Parser parser = new Parser();
+    public Parser parser ;
     private Integer posX = null;
     private Integer posY = null;
     public static Integer velocidad = 1;

@@ -20,7 +20,7 @@ public class Ladrillo extends Animacion{
     private Integer golpes = null;
     private Integer puntacion = null;
     private String habilidad;
-    private Parser Matrix = new Parser();
+    private Parser Matrix ;
 
     public Integer getGolpes() {
         return golpes;

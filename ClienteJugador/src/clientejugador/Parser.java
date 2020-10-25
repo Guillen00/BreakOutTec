@@ -45,8 +45,23 @@ public class Parser{
     private List<String> Fila1 = new ArrayList<>();
     private List<String> Fila0 = new ArrayList<>();
     private List<List<String>> Matriz = new ArrayList<>();
+    
+    private static Parser instanciaUnica;
+ 
+    private Parser() {}
 
-    public Parser() {}
+    private synchronized static void createInstance() {
+        if (instanciaUnica == null) { 
+            instanciaUnica = new Parser();
+        }
+    }
+ 
+    public static Parser getInstance() {
+        createInstance();
+
+        return instanciaUnica;
+    }
+
 
     public List<Integer> getPosX() {
         return posX;
@@ -112,7 +127,7 @@ public class Parser{
     Interfaz.Puntaje = puntaje;
     }
 
-    public void parser(String texto){
+    public void parserText(String texto){
         String[] aux =texto.split("\n")[0].split(";");
         vidas = Integer.parseInt(aux[0]);
         posicionRaqX = Integer.parseInt(aux[1]);
@@ -186,8 +201,28 @@ public class Parser{
     }
 
     public void setMatriz(Integer columna,Integer fila){
-        Matriz.get(fila).set(columna, "1");
+        Matriz.get(columna).set(fila, "1");
+        System.out.println(Matriz);
     }
+    
+    public static void main(String[] args) {
+        Parser p = Parser.getInstance();
+        p.parserText("3;0;1;5;1000;1000;0;-1;\n" +
+                        "1;1\n"+
+                "1;2;3;4;5\n" +
+                "0;0;0;0;0\n" +
+                "0;0;0;0;0\n" +
+                "0;0;0;0;0\n" +
+                "0;0;0;0;0\n" +
+                "0;0;0;0;0\n" +
+                "0;0;0;0;0\n" +
+                "0;0;0;0;0");
+        System.out.print(p.Matriz);
+        p.setMatriz(1, 1);
+  
+    }
+    
+    private void initUI() {}
 
     /**
     public static void main(String[] args) {
