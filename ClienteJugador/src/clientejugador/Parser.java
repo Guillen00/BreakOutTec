@@ -85,7 +85,7 @@ public class Parser{
         velocidadMas = texto.split(";")[4];
         velocidadMenos = texto.split(";")[5];
         masVida = texto.split(";")[6];
-        dosBolas = texto.split(";")[7];
+        dosBolas = texto.split(";")[7].substring(0,1);
     }
     public Boolean isRaquetaMitad(){
         return 1 ==  Integer.parseInt(this.raquetaMitad);
