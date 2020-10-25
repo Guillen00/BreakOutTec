@@ -10,7 +10,7 @@
 #define NARANJA 1
 #define ROJO 0
 
-#define numCol 5
+#define numCol 12
 #define numFilas 8
 
 #define puntajeVerdeInicial 2
@@ -25,8 +25,8 @@
 #define probVidaInicial 15
 #define probBalonInicial 15
 
-#define raquetaTamanoInicial 1000
+#define raquetaTamanoInicial 100
 #define vidaInicial 3
-#define velocidadInicial 1000
+#define velocidadInicial 10000
 
 #endif //SERVER_CONSTANTS_H

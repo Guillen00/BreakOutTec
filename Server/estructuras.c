@@ -77,7 +77,6 @@ struct ladrillo* crearLadrillo(int color, struct juego* juego){
 
     ladrillo->balon=rand() % 100<juego->probBalon;
     ladrillo->vida=rand() % 100<juego->probVida;
-    ladrillo->destruido=false;
 }
 struct lista* crearFila(int color, struct juego* juego){
     struct lista* lista=malloc(sizeof(struct lista));
@@ -97,33 +96,8 @@ struct lista* crearFila(int color, struct juego* juego){
     return lista;
 }
 
-struct ladrillo* obtenerLadrilloDestruido(int matriz[numFilas][numCol], struct lista listas[numFilas]){
-    struct nodo* actualNodo;
-    for(int i=0;i<numFilas;i++) {
-        actualNodo=listas[i].primero;
-        for(int j=0;j<numCol;j++) {
-            if(((struct ladrillo*)actualNodo->data)->destruido!=matriz[i][j] && matriz[i][j]==1){
-                return actualNodo->data;
-            }
-            actualNodo = actualNodo->next;
-        }
-    }
-    return NULL;
-}
 
-bool quedanLadrillos(struct lista listas[numFilas]){
-    struct nodo* actualNodo;
-    for(int i=0;i<numFilas;i++) {
-        actualNodo=listas[i].primero;
-        for(int j=0;j<numCol;j++) {
-            if(((struct ladrillo*)actualNodo->data)->destruido==false){
-                return true;
-            }
-            actualNodo = actualNodo->next;
-        }
-    }
-    return false;
-}
+
 
 
 void liberarListaAux(struct nodo* cabeza)

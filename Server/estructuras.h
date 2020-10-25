@@ -19,7 +19,6 @@ struct ladrillo{
     bool velocidadMenos;
     bool vida;
     bool balon;
-    bool destruido;
 };
 
 struct coordenadas{
@@ -36,17 +35,10 @@ struct lista{
 };
 struct juego{
     struct lista listas[8];
-    int vidas;
-    int vidaAnterior;
-    int nivel;
-    int posicionRaqX;
-    int numeroCol;
-    struct lista* coordenadasList;
+    char* url;
     int puntaje;
-    int balones;
-    int velocidad;
-
-    int raquetaTamano;
+    int subirNivel;
+    struct ladrillo* ladrillo;
 
     int puntajeVerde;
     int puntajeAmarillo;

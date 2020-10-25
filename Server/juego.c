@@ -10,16 +10,16 @@
 #include "socket.h"
 #include "interaccion.h"
 #include "windows.h"
-struct juego juego={NULL,.vidas=vidaInicial,vidaInicial,1,0,numCol,NULL,0,1,
-                    velocidadInicial,raquetaTamanoInicial,puntajeVerdeInicial,puntajeAmarilloInicial,
+
+
+struct juego juego={NULL,.url=NULL,.puntaje=0,0,NULL,puntajeVerdeInicial,puntajeAmarilloInicial,
                     puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
                     probRaqDobleinicial,probVelMasinicial,probVelMenosinicial,
                     probVidaInicial,probBalonInicial};
-
+char url[300];
 int terminate=0;
 
 void liberarListasIntermedio(){
-    liberarLista(juego.coordenadasList);
     for(int i=0;i<numFilas;i++) {
         liberarLista(&juego.listas[i]);
     }
@@ -31,15 +31,6 @@ void nuevasListas(){
     }
 }
 
-void iniciarCoordenadas(){
-    struct lista* lista=malloc(sizeof(struct lista));
-    *lista=(struct lista){NULL};
-    juego.coordenadasList=lista;
-    struct lista* coords=juego.coordenadasList;
-    struct coordenadas* coordenadas= malloc(sizeof(struct coordenadas));
-    *coordenadas=(struct coordenadas){-1,-1};
-    agregarNodo(coords,coordenadas);
-}
 
 void algoritmoDeCambioExponencial(){
     juego.probRaqMitad*=2;
@@ -48,111 +39,43 @@ void algoritmoDeCambioExponencial(){
     juego.probVelMenos/=2;
     juego.probVida/=2;
     juego.probBalon*=2;
-    juego.velocidad*=1.3;
 }
 
-
-void subirPuntaje(int color){
-    if(color==VERDE){
-        juego.puntaje+=juego.puntajeVerde;
-    }else if(color==AMARILLO){
-        juego.puntaje+=juego.puntajeAmarillo;
-    }else if(color==NARANJA){
-        juego.puntaje+=juego.puntajeNaranja;
-    }else if(color==ROJO){
-        juego.puntaje+=juego.puntajeRojo;
+void checkearSubirNivel(){
+    if(juego.subirNivel) {
+        algoritmoDeCambioExponencial();
+        liberarListasIntermedio();
+        nuevasListas();
+        juego.subirNivel=0;
     }
 }
 
-void ladrilloDestruido(struct ladrillo* ladrillo){
-    ladrillo->destruido=true;
-    if(ladrillo->velocidadMas){
-        juego.velocidad*=1.3;
-    }
-    if(ladrillo->velocidadMenos){
-        juego.velocidad/=1.3;
-    }
-    if(ladrillo->raquetaDoble){
-        juego.raquetaTamano*=2;
-    }
-    if(ladrillo->raquetaMitad){
-        juego.raquetaTamano/=2;
-    }
-    if(ladrillo->vida){
-        juego.vidas++;
-    }
-    if(ladrillo->balon){
-        juego.balones++;
-        struct coordenadas* newcords=malloc(sizeof(struct coordenadas));
-        *newcords=(struct coordenadas){-1,-1};
-        agregarNodo(juego.coordenadasList,newcords);
-    }
-    subirPuntaje(ladrillo->color);
-}
-
-void reiniciarJuego(){
-    liberarListasIntermedio();
-    juego=(struct juego){NULL,.vidas=vidaInicial,vidaInicial,1,0,numCol,
-            (struct lista*){NULL},0,1,
-           velocidadInicial,raquetaTamanoInicial,puntajeVerdeInicial,puntajeAmarilloInicial,
-           puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
-           probRaqDobleinicial,probVelMasinicial,probVelMenosinicial,
-           probVidaInicial,probBalonInicial};
-    nuevasListas();
-    iniciarCoordenadas();
-}
-
-
-void aumentarNivel(){
-    liberarListasIntermedio();
-    algoritmoDeCambioExponencial();
-    nuevasListas();
-    iniciarCoordenadas();
-    juego.balones=1;
-    juego.nivel++;
-}
-
-void revisarLadrillos(int matriz[numFilas][numCol]){
-    struct ladrillo *ladrillo = obtenerLadrilloDestruido(matriz, juego.listas);
+void subirPuntaje(struct ladrillo* ladrillo){
     if(ladrillo!=NULL) {
-        ladrilloDestruido(ladrillo);
-    }
-}
-
-bool pasarNivel(){
-    return !quedanLadrillos(juego.listas);
-}
-
-void revisarVida(){
-    if(juego.vidas<juego.vidaAnterior){
-        if(juego.balones>1){
-            borrarUltimo(juego.coordenadasList);
+        int color = ladrillo->color;
+        if (color == VERDE) {
+            juego.puntaje += juego.puntajeVerde;
+        } else if (color == AMARILLO) {
+            juego.puntaje += juego.puntajeAmarillo;
+        } else if (color == NARANJA) {
+            juego.puntaje += juego.puntajeNaranja;
+        } else if (color == ROJO) {
+            juego.puntaje += juego.puntajeRojo;
         }
-        juego.vidaAnterior=juego.vidas;
     }
 }
 
 void actualizarJuego(char* texto){
-    _sleep(10);
     if(isJugadorActivo()) {
         juegoToChar(texto, &juego);
         enviarDatos(texto);
+        juego.ladrillo=NULL;
         ///Se reciben los datos
-        if (recibirDatos(texto) != MESSAGE_ERROR) {
-            int matriz[numFilas][numCol];
+        if(recibirDatos(texto) != MESSAGE_ERROR) {
             ///Se parsean los datos
-            charToJuego(matriz, texto, &juego);
-            ///Se actualizan los datos necesarios
-            if (juego.vidas > 0) {
-                revisarVida();
-                if (!pasarNivel()) {
-                    revisarLadrillos(matriz);
-                } else {
-                    aumentarNivel();
-                }
-            } else {
-                reiniciarJuego();
-            }
+            charToJuego(texto, &juego);
+            checkearSubirNivel();
+            subirPuntaje(juego.ladrillo);
         }
     }
 }
@@ -212,7 +135,7 @@ void actualizacionDeAdministrador(){
 
                 token = strtok(NULL, " ");
                 char *booleano = strtok(NULL, " ");
-                bool numericosCorrectos = number1 > 0 && number2 > 0 && number1 < 9 && number2 < (juego.numeroCol + 1);
+                bool numericosCorrectos = number1 > 0 && number2 > 0 && number1 < 9 && number2 < (numCol + 1);
 
                 if (numericosCorrectos && token != NULL) {
                     struct ladrillo *ladrillo = ((struct ladrillo *) obtenerValor(&juego.listas[number1 - 1],
@@ -277,7 +200,6 @@ void actualizacionDeAdministrador(){
 
 void iniciar(){
     nuevasListas();
-    iniciarCoordenadas();
     DWORD ThreadId;
     CreateThread(NULL, 0, iniciarServer,NULL, 0, &ThreadId);
 
@@ -285,6 +207,12 @@ void iniciar(){
     for(int i=0;i<DEFAULT_BUFLEN;i++){
         texto[i]='\0';
     }
+    juego.url=url;
+
+    for(int i=0;i<300;i++){
+        url[i]='\0';
+    }
+
     iniciarInteraccion();
     while(!terminate){
         actualizarJuego(texto);
