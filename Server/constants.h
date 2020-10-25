@@ -8,7 +8,7 @@
 #define VERDE 3
 #define AMARILLO 2
 #define NARANJA 1
-#define ROJO 0
+#define ROJO 1
 
 #define numCol 12
 #define numFilas 8

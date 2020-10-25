@@ -139,7 +139,7 @@ public class Parser{
       aux = URL + ";" + Interfaz.SubirNivel.toString() + ";" + Columna.toString() + ";"+ Fila.toString();
       Columna= -1;
       Fila= -1;      
-      System.out.print(aux);
+      System.out.println(aux);
       return aux;
     }
     
