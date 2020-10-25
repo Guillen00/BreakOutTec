@@ -50,7 +50,7 @@ void charToJuego(char* texto,struct juego* juego){
     strcpy(copyTexto,texto);
 
     char * token = strtok_r(copyTexto, ";", &aux1);
-    juego->url=token;
+    strcpy(juego->url,token);
 
     token = strtok_r(NULL, ";", &aux1);
     juego->subirNivel=atoi(token);
