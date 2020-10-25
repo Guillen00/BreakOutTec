@@ -41,6 +41,8 @@ int juegoToChar(char* texto,struct juego* juego){
         strcpy(index,"0;0;0;0;0;0");
         index+=11;
     }
+    *index='\n';
+    index++;
     return index-texto;
 }
 
