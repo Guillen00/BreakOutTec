@@ -20,7 +20,7 @@ public class Ladrillo extends Animacion{
     private Integer golpes = null;
     private Integer puntacion = null;
     private String habilidad;
-    private Parser Aux = Parser.getInstance();
+    public static Parser Aux = Parser.getInstance();
 
     public Integer getGolpes() {
         return golpes;
@@ -99,9 +99,38 @@ public class Ladrillo extends Animacion{
     }
 
     private void loadImage() {
-
-        ImageIcon ii = new ImageIcon("src/imagen/morado.png");
-        image = ii.getImage();
+        
+        if(((this.y-50)/30) == 7){
+            ImageIcon ii = new ImageIcon("src/imagen/verde.png");
+            image = ii.getImage();
+        }
+        else if(((this.y-50)/30) == 6){
+            ImageIcon ii = new ImageIcon("src/imagen/verde.png");
+            image = ii.getImage();
+        }
+        else if(((this.y-50)/30) == 5){
+            ImageIcon ii = new ImageIcon("src/imagen/amarillo.png");
+            image = ii.getImage();
+        }
+        else if(((this.y-50)/30) == 4){
+            ImageIcon ii = new ImageIcon("src/imagen/amarillo.png");
+            image = ii.getImage();
+        }
+        else if(((this.y-50)/30) == 3){
+            ImageIcon ii = new ImageIcon("src/imagen/naranja.png");
+            image = ii.getImage();
+        }
+        else if(((this.y-50)/30) == 2){
+            ImageIcon ii = new ImageIcon("src/imagen/naranja.png");
+            image = ii.getImage();
+        }
+        else if(((this.y-50)/30) == 1){
+            ImageIcon ii = new ImageIcon("src/imagen/rojo.png");
+            image = ii.getImage();
+        }
+        else{
+        ImageIcon ii = new ImageIcon("src/imagen/rojo.png");
+        image = ii.getImage();}
     }
 
     Boolean isDestroyed() {
