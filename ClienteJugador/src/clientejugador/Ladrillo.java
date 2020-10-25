@@ -20,7 +20,7 @@ public class Ladrillo extends Animacion{
     private Integer golpes = null;
     private Integer puntacion = null;
     private String habilidad;
-    private Parser Matrix ;
+    private Parser Aux ;
 
     public Integer getGolpes() {
         return golpes;
@@ -120,9 +120,12 @@ public class Ladrillo extends Animacion{
         
         columna= ((x-110)/70)+1;
         fila = ((y-50)/30)+1;
-        
-        //System.out.println(columna);
-        //System.out.println(fila);
+        System.out.println("----------------------------------------------------");
+        System.out.println("Columna");
+        System.out.println(columna);
+        System.out.println("Fila");
+        System.out.println(fila);
+        Aux.LadrillosRotos(columna, fila);
         //Matrix.setMatriz(columna, fila);
         
     }

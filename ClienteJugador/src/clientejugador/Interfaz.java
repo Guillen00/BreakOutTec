@@ -43,8 +43,10 @@ public class Interfaz extends JPanel {
     private String puntaje = "";
     static Integer Record = 0;
     private String record = "";
-    private Boolean PowerBall = false;
-    public Client client = new Client("127.0.0.1", 27015);
+    public static Boolean PowerBall = false;
+    static Integer SubirNivel = 0;
+    
+    //public Client client = new Client("127.0.0.1", 27015);
     //public Parser Parser_mensaje = new Parser();
     
     public static Parser Parser_mensaje = Parser.getInstance();
@@ -58,17 +60,17 @@ public class Interfaz extends JPanel {
     }
 
     private void initBoard() {
-        Parser_mensaje.agregarMatriz();
+        
         addKeyListener(new TAdapter());
         setFocusable(true);
-        setPreferredSize(new Dimension(1400, 800));
+        setPreferredSize(new Dimension(1300, 700));
         setBackground(Color.BLACK);
     
         gameInit();
     }
 
     private void gameInit() {
-
+        SubirNivel =0;
         bricks = new Ladrillo[Variables.N_OF_BRICKS];
         ball = new Bola();
         paddle = new Raqueta();
@@ -206,10 +208,10 @@ public class Interfaz extends JPanel {
     }
     
     private void doGameCycle() {
-        String entrada = client.getMessage();
+        /*String entrada = client.getMessage();
         Parser_mensaje.parserText(entrada);
         Parser_mensaje.Update_Everything_Back();
-        
+        */
         ball.move();
         paddle.move();
         checkCollision();
@@ -219,11 +221,11 @@ public class Interfaz extends JPanel {
         }
         
         repaint();
-        
+        /*
         Parser_mensaje.Update_Everything();
         String salida = Parser_mensaje.toString();
         client.sendMessage(salida);
-        
+        */
     }
 
     private void stopGame() {
@@ -253,7 +255,7 @@ int xnono=0;
             }
 
             if (j == Variables.N_OF_BRICKS) {
-
+                SubirNivel=1;
                 message = "Victory";
                 stopGame();
             }

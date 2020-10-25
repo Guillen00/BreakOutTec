@@ -31,9 +31,11 @@ public class ClienteJugador extends JFrame{
 
         add(new Interfaz());
         setTitle("BreakoutTEC");
+        setLocation(0,0);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
+        
         setResizable(false);
         pack();
     }
