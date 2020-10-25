@@ -46,12 +46,10 @@ public class Interfaz extends JPanel {
     public static Boolean PowerBall = false;
     static Integer SubirNivel = 0;
     
-    //public Client client = new Client("127.0.0.1", 27015);
-    //public Parser Parser_mensaje = new Parser();
+    public Client client = new Client("127.0.0.1", 27015);
     
     public static Parser Parser_mensaje = Parser.getInstance();
-    
-    
+
     public Interfaz() {
         
         
@@ -208,10 +206,9 @@ public class Interfaz extends JPanel {
     }
     
     private void doGameCycle() {
-        /*String entrada = client.getMessage();
+        String entrada = client.getMessage();
         Parser_mensaje.parserText(entrada);
-        Parser_mensaje.Update_Everything_Back();
-        */
+        Parser_mensaje.Update();
         ball.move();
         paddle.move();
         checkCollision();
@@ -221,11 +218,8 @@ public class Interfaz extends JPanel {
         }
         
         repaint();
-        /*
-        Parser_mensaje.Update_Everything();
-        String salida = Parser_mensaje.toString();
-        client.sendMessage(salida);
-        */
+        client.sendMessage(Parser_mensaje.sendData());
+      
     }
 
     private void stopGame() {
@@ -338,13 +332,13 @@ int xnono=0;
                     bricks[i].setDestroyed1(true);
                     bricks[i].enviar_Matriz(bricks[i].x, bricks[i].y);
                     //Parser_mensaje.setMatriz(2, 2);
-                    Raqueta.LARGORAQUETA += 10;
+                    //Raqueta.LARGORAQUETA += 10;
                     //Bola.velocidad +=1;
-                    Raqueta.velocidad +=1;
+                    //Raqueta.velocidad +=1;
                     
-                    if(xnono == 0){
-                     PowerBall = true;
-                    xnono=1;}
+                    //if(xnono == 0){
+                     //PowerBall = true;
+                    //xnono=1;}
                 }
             }
         }

@@ -77,6 +77,7 @@ public class Parser{
 
 
     public void parserText(String texto){
+        System.out.print(texto);
         URL = texto.split(";")[0];
         puntaje = texto.split(";")[1];
         raquetaMitad = texto.split(";")[2];
