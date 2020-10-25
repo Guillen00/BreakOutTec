@@ -205,7 +205,7 @@ public class Parser{
         System.out.println(Matriz);
     }
     
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Parser p = Parser.getInstance();
         p.parserText("3;0;1;5;1000;1000;0;-1;\n" +
                         "1;1\n"+
@@ -220,7 +220,7 @@ public class Parser{
         System.out.print(p.Matriz);
         p.setMatriz(1, 1);
   
-    }
+    }*/
     
     private void initUI() {}
 
