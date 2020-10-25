@@ -126,7 +126,7 @@ public class Parser{
         if(isDosBolas()){
             Interfaz.PowerBall = true;
         }
-        
+        Interfaz.Puntaje = Integer.parseInt(puntaje);
     } 
     
     public void LadrillosRotos(Integer columna,Integer fila){
@@ -139,6 +139,7 @@ public class Parser{
       aux = URL + ";" + Interfaz.SubirNivel.toString() + ";" + Columna.toString() + ";"+ Fila.toString();
       Columna= -1;
       Fila= -1;      
+      System.out.print(aux);
       return aux;
     }
     
