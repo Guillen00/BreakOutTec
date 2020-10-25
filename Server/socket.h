@@ -1,6 +1,7 @@
 //
 // Created by alfab on 10/19/2020.
 //
+#include "windows.h"
 
 #ifndef SERVER_SOCKET_H
 #define SERVER_SOCKET_H
@@ -12,6 +13,6 @@
 int recibirDatos(char* datos);
 void enviarDatos(char* datos);
 int isJugadorActivo();
-int iniciarServer();
+DWORD WINAPI iniciarServer();
 
 #endif //SERVER_SOCKET_H

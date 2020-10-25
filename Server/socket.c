@@ -133,7 +133,7 @@ DWORD WINAPI connectionHandler(LPVOID Param){
     }
 }
 
-int iniciarServer()
+DWORD WINAPI iniciarServer()
 {
 
     for(int i=0;i<MAX_CLIENTS;i++){

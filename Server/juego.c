@@ -3,13 +3,13 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <string.h>
 #include "estructuras.h"
 #include "parser.h"
 #include "constants.h"
 #include "socket.h"
 #include "interaccion.h"
+#include "windows.h"
 struct juego juego={NULL,.vidas=vidaInicial,vidaInicial,1,0,numCol,NULL,0,1,
                     velocidadInicial,raquetaTamanoInicial,puntajeVerdeInicial,puntajeAmarilloInicial,
                     puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
@@ -278,8 +278,9 @@ void actualizacionDeAdministrador(){
 void iniciar(){
     nuevasListas();
     iniciarCoordenadas();
-    pthread_t thread_id;
-    pthread_create(&thread_id, NULL, (void *(*)(void *)) iniciarServer, NULL);
+    DWORD ThreadId;
+    CreateThread(NULL, 0, iniciarServer,NULL, 0, &ThreadId);
+
     char texto[DEFAULT_BUFLEN];
     for(int i=0;i<DEFAULT_BUFLEN;i++){
         texto[i]='\0';
