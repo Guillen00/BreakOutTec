@@ -77,6 +77,7 @@ void actualizarJuego(char* texto){
             checkearSubirNivel();
             subirPuntaje(juego.ladrillo);
         }
+        printf("%s\n",texto);
     }
 }
 
@@ -204,17 +205,17 @@ void iniciar(){
     CreateThread(NULL, 0, iniciarServer,NULL, 0, &ThreadId);
 
     char texto[DEFAULT_BUFLEN];
-    for(int i=0;i<DEFAULT_BUFLEN;i++){
-        texto[i]='\0';
-    }
     juego.url=url;
 
     for(int i=0;i<300;i++){
         url[i]='\0';
     }
-
+    url[0]='a';
     iniciarInteraccion();
     while(!terminate){
+        for(int i=0;i<DEFAULT_BUFLEN;i++){
+            texto[i]='\0';
+        }
         actualizarJuego(texto);
         actualizacionDeAdministrador();
     }

@@ -37,12 +37,12 @@ int juegoToChar(char* texto,struct juego* juego){
         index += calcularLongitudAsString(ladrillo->vida);
         sprintf(index, "%d", ladrillo->balon);
         index += calcularLongitudAsString(ladrillo->balon);
+        *(index-1)='\n';
     }else{
         strcpy(index,"0;0;0;0;0;0");
         index+=11;
+        *index='\n';
     }
-    *index='\n';
-    index++;
     return index-texto;
 }
 
