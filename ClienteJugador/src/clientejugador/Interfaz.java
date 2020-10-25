@@ -88,7 +88,7 @@ public class Interfaz extends JPanel {
         
         timer = new Timer(Variables.PERIOD, new GameCycle());
         timer.start();
-        
+
     }
     
 
@@ -204,11 +204,26 @@ public class Interfaz extends JPanel {
             
         }
     }
-    
+
+
+    private Boolean flag=true;
+    private class Server implements Runnable {
+        public void run() {
+            String entrada = client.getMessage();
+            Parser_mensaje.parserText(entrada);
+            Parser_mensaje.Update();
+
+            client.sendMessage(Parser_mensaje.sendData());
+            flag=true;
+        }
+    }
+
     private void doGameCycle() {
-        String entrada = client.getMessage();
-        Parser_mensaje.parserText(entrada);
-        Parser_mensaje.Update();
+        if(flag) {
+            flag=false;
+            Thread thread = new Thread(new Server());
+            thread.start();
+        }
         ball.move();
         paddle.move();
         checkCollision();
@@ -218,9 +233,10 @@ public class Interfaz extends JPanel {
         }
         
         repaint();
-        client.sendMessage(Parser_mensaje.sendData());
-      
+
     }
+
+
 
     private void stopGame() {
 
