@@ -20,6 +20,7 @@ public class Ladrillo extends Animacion{
     private Integer golpes = null;
     private Integer puntacion = null;
     private String habilidad;
+    private Parser Matrix = new Parser();
 
     public Integer getGolpes() {
         return golpes;
@@ -111,5 +112,18 @@ public class Ladrillo extends Animacion{
     void setDestroyed1(Boolean val) {
 
         destroyed = val;
+    }
+    
+    public void enviar_Matriz(Integer x,Integer y){
+        Integer columna = 1;
+        Integer fila = 1;
+        
+        columna= ((x-110)/70)+1;
+        fila = ((y-50)/30)+1;
+        
+        //System.out.println(columna);
+        //System.out.println(fila);
+        //Matrix.setMatriz(columna, fila);
+        
     }
 }

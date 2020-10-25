@@ -44,17 +44,18 @@ public class Interfaz extends JPanel {
     static Integer Record = 0;
     private String record = "";
     private Boolean PowerBall = false;
-    public Client client = new Client("127.0.0.1", 27015);
-    public Parser Parser_mensaje = new Parser();
+    //public Client client = new Client("127.0.0.1", 27015);
+    //public Parser Parser_mensaje = new Parser();
     
     public Interfaz() {
         
         
         initBoard();
+        
     }
 
     private void initBoard() {
-
+        
         addKeyListener(new TAdapter());
         setFocusable(true);
         setPreferredSize(new Dimension(1400, 800));
@@ -69,6 +70,8 @@ public class Interfaz extends JPanel {
         ball = new Bola();
         paddle = new Raqueta();
         ball2 = new Bola();
+        
+        
         Integer k = 0;
 
         for (Integer i = 0; i < 8; i++) {
@@ -79,6 +82,7 @@ public class Interfaz extends JPanel {
                 k++;
             }
         }
+        
         timer = new Timer(Variables.PERIOD, new GameCycle());
         timer.start();
         
@@ -199,10 +203,10 @@ public class Interfaz extends JPanel {
     }
     
     private void doGameCycle() {
-        String entrada = client.getMessage();
+        /*String entrada = client.getMessage();
         Parser_mensaje.parser(entrada);
         Parser_mensaje.Update_Everything_Back();
-        
+        */
         ball.move();
         paddle.move();
         checkCollision(ball);
@@ -210,12 +214,12 @@ public class Interfaz extends JPanel {
             ball2.move();
             checkCollision(ball2);
         }
-        
+        /*
         repaint();
         Parser_mensaje.Update_Everything();
         String salida = Parser_mensaje.toString();
         client.sendMessage(salida);
-        
+        */
     }
 
     private void stopGame() {
@@ -326,10 +330,11 @@ public class Interfaz extends JPanel {
                     }
 
                     bricks[i].setDestroyed1(true);
+                    bricks[i].enviar_Matriz(bricks[i].x, bricks[i].y);
                     Raqueta.LARGORAQUETA += 10;
                     //Bola.velocidad +=1;
                     Raqueta.velocidad +=1;
-                    PowerBall = true;
+                    //PowerBall = true;
                 }
             }
         }
