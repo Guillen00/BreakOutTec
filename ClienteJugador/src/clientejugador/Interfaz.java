@@ -45,7 +45,7 @@ public class Interfaz extends JPanel {
     private String record = "";
     public static Boolean PowerBall = false;
     static Integer SubirNivel = 0;
-    
+    private Capturas capturas=new Capturas(this);
     public Client client = new Client("127.0.0.1", 27015);
     
     public static Parser Parser_mensaje = Parser.getInstance();
@@ -72,7 +72,6 @@ public class Interfaz extends JPanel {
         bricks = new Ladrillo[Variables.N_OF_BRICKS];
         ball = new Bola();
         paddle = new Raqueta();
-        ball2 = new Bola();
         Thread thread = new Thread(new Server());
         thread.start();
         
@@ -98,6 +97,7 @@ public class Interfaz extends JPanel {
         super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g;
+        
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -120,8 +120,6 @@ public class Interfaz extends JPanel {
 
     private void drawObjects(Graphics2D g2d) {
         
-        //g2d.drawImage(paddle.getImage(), paddle.getX(), paddle.getY(),
-        //        (paddle.getImageWidth())/2, (paddle.getImageHeight())/2, this);
         g2d.drawRect(0, 0, 1050, 800);
         Font font = new Font("Verdana", Font.BOLD, 18);
         g2d.setColor(Color.WHITE);
@@ -189,9 +187,7 @@ public class Interfaz extends JPanel {
              if(interruptor1 == 0){
              ball = new Bola();
              interruptor1=1;}
-             //ball2 =new Bola();
-             g2d.drawImage(ball2.getImage(), ball2.getX(), ball2.getY(),
-                ball2.getImageWidth(), ball2.getImageHeight(), this);
+
          }
 
      }
@@ -214,21 +210,16 @@ public class Interfaz extends JPanel {
                 String entrada = client.getMessage();
                 Parser_mensaje.parserText(entrada);
                 Parser_mensaje.Update();
+                capturas.capturar(Parser_mensaje);
                 client.sendMessage(Parser_mensaje.sendData());
             }
         }
     }
 
     private void doGameCycle() {
-
         ball.move();
         paddle.move();
         checkCollision();
-        if(PowerBall){
-            ball2.move();
-            checkCollision2();
-        }
-
         repaint();
 
     }
@@ -262,9 +253,12 @@ int xnono=0;
             }
 
             if (j == Variables.N_OF_BRICKS) {
-                SubirNivel=1;
+                
                 message = "Victory";
-                stopGame();
+                //stopGame();
+                SubirNivel=1;
+                niveles++;
+                gameInit();
             }
         }
 
@@ -273,10 +267,10 @@ int xnono=0;
             Integer paddleLPos = (int) paddle.getRectPaddle().getMinX();
             Integer ballLPos = (int) ball.getRectBall().getMinX();
 
-            Integer first = paddleLPos + 8;
-            Integer second = paddleLPos + 16;
-            Integer third = paddleLPos + 24;
-            Integer fourth = paddleLPos + 32;
+            Integer first = paddleLPos + (Raqueta.LARGORAQUETA/4);
+            Integer second = paddleLPos + (Raqueta.LARGORAQUETA/3);
+            Integer third = paddleLPos + (Raqueta.LARGORAQUETA/2);
+            Integer fourth = paddleLPos + (Raqueta.LARGORAQUETA/1);
 
             if (ballLPos < first) {
 
@@ -344,130 +338,10 @@ int xnono=0;
 
                     bricks[i].setDestroyed1(true);
                     bricks[i].enviar_Matriz(bricks[i].x, bricks[i].y);
-                    //Parser_mensaje.setMatriz(2, 2);
-                    //Raqueta.LARGORAQUETA += 10;
-                    //Bola.velocidad +=1;
-                    //Raqueta.velocidad +=1;
-                    
-                    //if(xnono == 0){
-                     //PowerBall = true;
-                    //xnono=1;}
+
                 }
             }
         }
     }
-    
-     private void checkCollision2() {
 
-        if (ball2.getRectBall().getMaxY() > Variables.BOTTOM_EDGE) {
-            if (vidas>0){
-                vidas--;
-                PowerBall = false;
-                return;
-            }
-            else{
-                stopGame();
-            }
-            
-        }
-
-        for (Integer i = 0, j = 0; i < Variables.N_OF_BRICKS; i++) {
-
-            if (bricks[i].isDestroyed()) {
-
-                j++;
-            }
-
-            if (j == Variables.N_OF_BRICKS) {
-
-                message = "Victory";
-                stopGame();
-            }
-        }
-
-        if ((ball2.getRectBall()).intersects(paddle.getRectPaddle())) {
-
-            Integer paddleLPos = (int) paddle.getRectPaddle().getMinX();
-            Integer ballLPos = (int) ball2.getRectBall().getMinX();
-
-            Integer first = paddleLPos + 8;
-            Integer second = paddleLPos + 16;
-            Integer third = paddleLPos + 24;
-            Integer fourth = paddleLPos + 32;
-
-            if (ballLPos < first) {
-
-                ball2.setXDir(-Bola.velocidad);
-                ball2.setYDir(-Bola.velocidad);
-            }
-
-            if (ballLPos >= first && ballLPos < second) {
-
-                ball2.setXDir(-Bola.velocidad);
-                ball2.setYDir(-Bola.velocidad * ball2.getYDir());
-            }
-
-            if (ballLPos >= second && ballLPos < third) {
-
-                ball2.setXDir(0);
-                ball2.setYDir(-Bola.velocidad);
-            }
-
-            if (ballLPos >= third && ballLPos < fourth) {
-
-                ball2.setXDir(Bola.velocidad);
-                ball2.setYDir(-Bola.velocidad * ball.getYDir());
-            }
-
-            if (ballLPos > fourth) {
-
-                ball2.setXDir(Bola.velocidad);
-                ball2.setYDir(-Bola.velocidad);
-            }
-            
-        }
-
-        for (Integer i = 0; i < Variables.N_OF_BRICKS; i++) {
-
-            if ((ball2.getRectBall()).intersects(bricks[i].getRectBrick())) {
-
-                Integer ballLeft = (int) ball2.getRectBall().getMinX();
-                Integer ballHeight = (int) ball2.getRectBall().getHeight();
-                Integer ballWidth = (int) ball2.getRectBall().getWidth();
-                Integer ballTop = (int) ball2.getRectBall().getMinY();
-
-                Point pointRight = new Point(ballLeft + ballWidth + 1, ballTop);
-                Point pointLeft = new Point(ballLeft - 1, ballTop);
-                Point pointTop = new Point(ballLeft, ballTop - 1);
-                Point pointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
-
-                if (!bricks[i].isDestroyed()) {
-
-                    if (bricks[i].getRectBrick().contains(pointRight)) {
-
-                        ball2.setXDir(-Bola.velocidad);
-                    } else if (bricks[i].getRectBrick().contains(pointLeft)) {
-
-                        ball2.setXDir(Bola.velocidad);
-                    }
-
-                    if (bricks[i].getRectBrick().contains(pointTop)) {
-
-                        ball2.setYDir(Bola.velocidad);
-                    } else if (bricks[i].getRectBrick().contains(pointBottom)) {
-
-                        ball2.setYDir(-Bola.velocidad);
-                    }
-
-                    bricks[i].setDestroyed1(true);
-                    bricks[i].enviar_Matriz(bricks[i].x, bricks[i].y);
-                    //Parser_mensaje.setMatriz(2, 2);
-                    Raqueta.LARGORAQUETA += 10;
-                    //Bola.velocidad +=1;
-                    Raqueta.velocidad +=1;
-                    //PowerBall = true;
-                }
-            }
-        }
-    }
 }

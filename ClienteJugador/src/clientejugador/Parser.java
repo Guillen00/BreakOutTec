@@ -14,41 +14,19 @@ package clientejugador;
  */
 
 
-import javafx.util.Pair;
-import jdk.internal.org.objectweb.asm.tree.IntInsnNode;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * @author Usuario
+ * @author Juan
  */
 public class Parser{
-/*
-    private Integer vidas;
-    private Integer posicionRaqX;
-    private Integer balones;
-    private Integer numeroColumnas;
-    private Integer nivel;
-    private Integer raquetaTamano;
-    private Integer velocidad;
-    private Integer puntaje;
-    private List<Integer> posX  = new ArrayList<>();
-    private List<Integer> posY  = new ArrayList<>();
-    private List<String> Fila7 = new ArrayList<>();
-    private List<String> Fila6 = new ArrayList<>();
-    private List<String> Fila5 = new ArrayList<>();
-    private List<String> Fila4 = new ArrayList<>();
-    private List<String> Fila3 = new ArrayList<>();
-    private List<String> Fila2 = new ArrayList<>();
-    private List<String> Fila1 = new ArrayList<>();
-    private List<String> Fila0 = new ArrayList<>();
-    private List<List<String>> Matriz = new ArrayList<>();
-    
-    */
+
     private String URL;
+    private String imageNumber;
     private String puntaje;
+    private String record;
     private String raquetaDoble;
     private String raquetaMitad;
     private String velocidadMas;
@@ -76,16 +54,21 @@ public class Parser{
     }
 
 
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
+
     public void parserText(String texto){
-        System.out.print(texto);
         URL = texto.split(";")[0];
-        puntaje = texto.split(";")[1];
-        raquetaMitad = texto.split(";")[2];
-        raquetaDoble = texto.split(";")[3];
-        velocidadMas = texto.split(";")[4];
-        velocidadMenos = texto.split(";")[5];
-        masVida = texto.split(";")[6];
-        dosBolas = texto.split(";")[7].substring(0,1);
+        imageNumber=texto.split(";")[1];
+        puntaje = texto.split(";")[2];
+        record = texto.split(";")[3];
+        raquetaMitad = texto.split(";")[4];
+        raquetaDoble = texto.split(";")[5];
+        velocidadMas = texto.split(";")[6];
+        velocidadMenos = texto.split(";")[7];
+        masVida = texto.split(";")[8];
+        dosBolas = texto.split(";")[9].substring(0,1);
     }
     public Boolean isRaquetaMitad(){
         return 1 ==  Integer.parseInt(this.raquetaMitad);
@@ -108,16 +91,16 @@ public class Parser{
     
     
     public void Update(){
-        if(isRaquetaMitad()){
+        if(isRaquetaMitad() && (Raqueta.minLargo <= Raqueta.LARGORAQUETA)){
             Raqueta.LARGORAQUETA = Raqueta.LARGORAQUETA/2;
         }
-        if(isRaquetaDoble()){
+        if(isRaquetaDoble()&& (Raqueta.maxLargo >= Raqueta.LARGORAQUETA)){
             Raqueta.LARGORAQUETA = Raqueta.LARGORAQUETA*2;
         }
-        if(isVelocidadMas()){
+        if(isVelocidadMas() && (Bola.velocidad <= 8 )){
             Bola.velocidad = Bola.velocidad+1;
         }
-        if(isVelocidadMenos()){
+        if(isVelocidadMenos()&& (Bola.velocidad >= 2)){
             Bola.velocidad = Bola.velocidad-1;
         }
         if(isMasVida()){
@@ -127,20 +110,32 @@ public class Parser{
             Interfaz.PowerBall = true;
         }
         Interfaz.Puntaje = Integer.parseInt(puntaje);
+        Interfaz.Record = Integer.parseInt(record);
+
     } 
     
     public void LadrillosRotos(Integer columna,Integer fila){
         Columna=columna-1;
         Fila=fila-1;
     }
-    
+
+    public String getURL() {
+        return URL;
+    }
+
     public String sendData(){
       String aux;
-      aux = URL + ";" + Interfaz.SubirNivel.toString() + ";" + Columna.toString() + ";"+ Fila.toString();
+      aux = URL + ";" + imageNumber+ ";"+ Interfaz.SubirNivel.toString() + ";" + Columna.toString() + ";"+ Fila.toString();
       Columna= -1;
       Fila= -1;      
-      System.out.println(aux);
       return aux;
     }
-    
+
+    public String getImageNumber() {
+        return imageNumber;
+    }
+
+    public void setImageNumber(String imageNumber) {
+        this.imageNumber = imageNumber;
+    }
 }

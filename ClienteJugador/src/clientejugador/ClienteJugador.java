@@ -34,7 +34,6 @@ public class ClienteJugador extends JFrame{
         setLocation(0,0);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //setLocationRelativeTo(null);
         
         setResizable(false);
         pack();

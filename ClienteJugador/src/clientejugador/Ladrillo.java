@@ -13,73 +13,10 @@ package clientejugador;
 import javax.swing.ImageIcon;
 
 public class Ladrillo extends Animacion{
-    //p    private Boolean destroyed = new Boolean(false);
     private Boolean destroyed;
-    private Integer posX = null;
-    private Integer posY = null;
-    private Integer golpes = null;
-    private Integer puntacion = null;
-    private String habilidad;
+
     public static Parser Aux = Parser.getInstance();
 
-    public Integer getGolpes() {
-        return golpes;
-    }
-
-    public void setGolpes(Integer golpes) {
-        this.golpes = golpes;
-    }
-
-    public Integer getPuntacion() {
-        return puntacion;
-    }
-
-    public void setPuntacion(Integer puntacion) {
-        this.puntacion = puntacion;
-    }
-    
-    public Boolean getDestroyed() {
-        return destroyed;
-    }
-
-    public void setDestroyed(Boolean destroyed) {
-        this.destroyed = destroyed;
-    }
-
-    public Integer getPosX() {
-        return posX;
-    }
-
-    public void setPosX(Integer posX) {
-        this.posX = posX;
-    }
-
-    public Integer getPosY() {
-        return posY;
-    }
-
-    public void setPosY(Integer posY) {
-        this.posY = posY;
-    }
-
-    public String getHabilidad() {
-        return habilidad;
-    }
-
-    public void setHabilidad(String habilidad) {
-        this.habilidad = habilidad;
-    }
-    
-    public void sumarPuntacion(Integer punt){
-        this.puntacion = this.puntacion + punt;
-    }
-    
-    public void aplicacionHabilidad(){
-        if(getDestroyed()== true){
-            //Introducir funcion que aplique algun cambio en las pelotas 
-            //en la raqueta o en la veolicidad del juego 
-        }
-    }
     
 
     public Ladrillo(Integer x, Integer y) {
@@ -146,16 +83,9 @@ public class Ladrillo extends Animacion{
     public void enviar_Matriz(Integer x,Integer y){
         Integer columna = 1;
         Integer fila = 1;
-        
         columna= ((x-110)/70)+1;
         fila = ((y-50)/30)+1;
-        System.out.println("----------------------------------------------------");
-        System.out.println("Columna");
-        System.out.println(columna);
-        System.out.println("Fila");
-        System.out.println(fila);
         Aux.LadrillosRotos(columna, fila);
-        //Matrix.setMatriz(columna, fila);
         
     }
 }

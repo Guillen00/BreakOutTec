@@ -19,8 +19,14 @@ int juegoToChar(char* texto,struct juego* juego){
     index+=strlen(juego->url);
     *index=';';
     index++;
+    sprintf(index, "%d;", juego->imagenumber);
+    index += calcularLongitudAsString(juego->imagenumber);
+
     sprintf(index, "%d;", juego->puntaje);
     index += calcularLongitudAsString(juego->puntaje);
+
+    sprintf(index, "%d;", juego->record);
+    index += calcularLongitudAsString(juego->record);
 
     struct ladrillo* ladrillo=juego->ladrillo;
 
@@ -53,6 +59,9 @@ void charToJuego(char* texto,struct juego* juego){
 
     char * token = strtok_r(copyTexto, ";", &aux1);
     strcpy(juego->url,token);
+
+    token = strtok_r(NULL, ";", &aux1);
+    juego->imagenumber=atoi(token);
 
     token = strtok_r(NULL, ";", &aux1);
     juego->subirNivel=atoi(token);

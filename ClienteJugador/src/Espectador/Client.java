@@ -1,22 +1,24 @@
-// A Java program for a Client
+package Espectador;
+
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
 
 public class Client
 {
-    private final String TIPO="Tipo: Jugador";
+    private final String TIPO="Tipo: Espectador";
     private Socket socket;
     private PrintStream out;
     private BufferedReader in;
 
+
     public Client(String address, int port)
     {
+
         //Inicia el Socket
         try
         {
             socket = new Socket(address, port);
-            System.out.println("Connected");
 
             out = new PrintStream( socket.getOutputStream() );
             in = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
@@ -26,24 +28,27 @@ public class Client
 
         } catch(IOException u)
         {
-            System.out.println(u);
             closeConnection();
         }
     }
 
     public String getMessage(){
-        String updade=null;
+        String update=null;
         try{
-            updade=read();
+            update=read();
         }catch(IOException u){
-            System.out.println(u);
             closeConnection();
         }
-        return updade;
+        return update;
     }
 
     public void sendMessage(String Message){
         out.print(Message+"\0");
+    }
+
+    public String getURL(){
+        String[] message= getMessage().split(";");
+        return message[0]+message[1];
     }
 
     private String read() throws IOException {
@@ -58,11 +63,12 @@ public class Client
             in.mark(1);
         }
         message+=line;
+/*
         try {
             TimeUnit.MILLISECONDS.sleep(100);
         }catch (InterruptedException u){
-            System.out.println(u);
         }
+*/
 
         return message;
     }
@@ -76,16 +82,7 @@ public class Client
         }
         catch(IOException i)
         {
-            System.out.println(i);
         }
     }
 
-    public static void main(String args[])
-    {
-        Client client = new Client("127.0.0.1", 27015);
-        String result = client.getMessage();
-        System.out.println(result);
-        client.sendMessage("4;4;4\n4;5;3;4\n0;0;0;0;0\n0;0;0;0;0\n0;0;0;0;0\n" +
-                "0;0;0;0;0\n0;0;0;0;0\n0;0;0;0;0\n0;0;0;0;0\n0;0;0;0;0");
-    }
 }

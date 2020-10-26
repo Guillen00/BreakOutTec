@@ -13,47 +13,8 @@ import javax.swing.ImageIcon;
  */
 public class Bola extends Animacion{
     public Parser parser ;
-    private Integer posX = null;
-    private Integer posY = null;
-    public static Integer velocidad = 1;
+    public static Integer velocidad = 2;
     
-    
-    
-    
-   
-    /*
-    public void movimiento(Integer largo,Integer alto){
-
-    }
-    
-    public void movAribaAbajo(){
-        sumarX(getVelocidad());
-    }
-    
-    public void movAbajoArriba(){
-        sumarX(-getVelocidad());
-    }
-    
-    public void movDiaDerArriba(){
-        sumarX(getVelocidad());
-        sumarY(getVelocidad());
-    }
-    
-    public void movDiaDerAbajo(){
-        sumarX(getVelocidad());
-        sumarY(-getVelocidad());
-    }
-    
-    public void movDiaIzqArriba(){
-        sumarX(-getVelocidad());
-        sumarY(getVelocidad());
-    }
-    
-    public void movDiaIzqAbejo(){
-        sumarX(getVelocidad());
-        sumarY(-getVelocidad()); 
-    }
-*/
     
     private Integer xdir;
     private Integer ydir;
@@ -91,7 +52,6 @@ public class Bola extends Animacion{
 
         if (x > Variables.WIDTH - imageWidth) {
 
-            System.out.println(imageWidth);
             setXDir(-velocidad);
         }
 

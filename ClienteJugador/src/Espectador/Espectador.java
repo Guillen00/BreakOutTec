@@ -5,6 +5,7 @@
  */
 package Espectador;
 
+
 import javax.swing.JFrame;
 
 /**
@@ -76,16 +77,19 @@ public class Espectador extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        JFrame ventana = new JFrame("Grafo");
-        ventana.add(new Aux_Expectador());
-        
+        JFrame ventana = new JFrame("Espectador");
+        Aux_Expectador aux=new Aux_Expectador();
+        Thread hilo=new Thread(aux);
+        ventana.add(aux);
+        hilo.start();
+
         /*JPanel panel = new JPanel();
         
         panel.setSize(500, 500);
         panel.add(new Lienzo());
         panel.setVisible(true);
         ventana.add(panel);*/
-        ventana.setSize(600, 600);
+        ventana.setSize(1300, 700);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setVisible(true);
 

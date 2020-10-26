@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <direct.h>
 #include "estructuras.h"
 #include "parser.h"
 #include "constants.h"
@@ -12,7 +13,7 @@
 #include "windows.h"
 
 
-struct juego juego={NULL,.url=NULL,.puntaje=0,0,NULL,puntajeVerdeInicial,puntajeAmarilloInicial,
+struct juego juego={NULL,.url=NULL,.imagenumber=0,.puntaje=0,0,0,NULL,puntajeVerdeInicial,puntajeAmarilloInicial,
                     puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
                     probRaqDobleinicial,probVelMasinicial,probVelMenosinicial,
                     probVidaInicial,probBalonInicial};
@@ -62,6 +63,9 @@ void subirPuntaje(struct ladrillo* ladrillo){
         } else if (color == ROJO) {
             juego.puntaje += juego.puntajeRojo;
         }
+        if(juego.puntaje>juego.record){
+            juego.record=juego.puntaje;
+        }
     }
 }
 
@@ -77,7 +81,8 @@ void actualizarJuego(char* texto){
             checkearSubirNivel();
             subirPuntaje(juego.ladrillo);
         }
-        printf("%s\n",texto);
+    }else{
+        juego.puntaje=0;
     }
 }
 
@@ -210,7 +215,7 @@ void iniciar(){
     for(int i=0;i<300;i++){
         url[i]='\0';
     }
-    url[0]='a';
+    _getcwd(url, sizeof(url));
     iniciarInteraccion();
     while(!terminate){
         for(int i=0;i<DEFAULT_BUFLEN;i++){

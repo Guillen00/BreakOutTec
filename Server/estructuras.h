@@ -36,7 +36,9 @@ struct lista{
 struct juego{
     struct lista listas[8];
     char* url;
+    int imagenumber;
     int puntaje;
+    int record;
     int subirNivel;
     struct ladrillo* ladrillo;
 

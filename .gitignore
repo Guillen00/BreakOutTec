@@ -1,1 +1,12 @@
 /ClienteJugador/build/
+.tmp.drivedownload/
+
+Server/cmake-build-debug/
+
+Server/.idea/
+
+ClienteJugador/.idea/
+
+ClienteJugador/out/
+
+untitled/

@@ -33,7 +33,6 @@ public class Client
 
         } catch(IOException u)
         {
-            System.out.println(u);
             closeConnection();
         }
     }
@@ -43,7 +42,6 @@ public class Client
         try{
             update=read();
         }catch(IOException u){
-            System.out.println(u);
             closeConnection();
         }
         return update;
@@ -65,11 +63,10 @@ public class Client
             in.mark(1);
         }
         message+=line;
-        try {
+/*        try {
             TimeUnit.MILLISECONDS.sleep(100);
         }catch (InterruptedException u){
-            System.out.println(u);
-        }
+        }*/
 
         return message;
     }
@@ -83,16 +80,7 @@ public class Client
         }
         catch(IOException i)
         {
-            System.out.println(i);
         }
     }
 
-    /*public static void main(String args[])
-    {
-        Client client = new Client("127.0.0.1", 27015);
-        String result = client.getMessage();
-        System.out.println(result);
-        client.sendMessage("4;4;4\n4;5;3;4\n0;0;0;0;0\n0;0;0;0;0\n0;0;0;0;0\n" +
-                "0;0;0;0;0\n0;0;0;0;0\n0;0;0;0;0\n0;0;0;0;0\n0;0;0;0;0");
-    }*/
 }
