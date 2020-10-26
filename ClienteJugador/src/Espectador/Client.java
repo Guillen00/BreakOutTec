@@ -1,5 +1,6 @@
 package Espectador;
 
+import javax.print.attribute.standard.NumberUp;
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
@@ -47,8 +48,12 @@ public class Client
     }
 
     public String getURL(){
-        String[] message= getMessage().split(";");
-        return message[0]+message[1];
+        try {
+            String[] message= getMessage().split(";");
+            return message[1];
+        }catch (NullPointerException e){
+            return null;
+        }
     }
 
     private String read() throws IOException {

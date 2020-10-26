@@ -45,9 +45,8 @@ public class Interfaz extends JPanel {
     private String record = "";
     public static Boolean PowerBall = false;
     static Integer SubirNivel = 0;
-    private Capturas capturas=new Capturas(this);
     public Client client = new Client("127.0.0.1", 27015);
-    
+    private JPanel interfaz=this;
     public static Parser Parser_mensaje = Parser.getInstance();
 
     public Interfaz() {
@@ -208,10 +207,13 @@ public class Interfaz extends JPanel {
         public void run() {
             while(flag) {
                 String entrada = client.getMessage();
-                Parser_mensaje.parserText(entrada);
-                Parser_mensaje.Update();
-                capturas.capturar(Parser_mensaje);
-                client.sendMessage(Parser_mensaje.sendData());
+                if (entrada != null) {
+                    Parser_mensaje.parserText(entrada);
+                    Parser_mensaje.Update();
+                    client.sendMessage(Parser_mensaje.sendData(interfaz));
+                }else{
+                    client=new Client("127.0.0.1", 27015);
+                }
             }
         }
     }

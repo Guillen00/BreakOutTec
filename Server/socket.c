@@ -24,7 +24,12 @@ extern int terminate;
 
 int recibirMensaje(SOCKET ClientSocket,char* rec){
     int iResult = recv(ClientSocket, rec, DEFAULT_BUFLEN, 0);
-    if(iResult<=0){
+    char* current= rec;
+    while(iResult==DEFAULT_BUFLEN){
+        current+=iResult;
+        iResult = recv(ClientSocket, current, DEFAULT_BUFLEN, 0);
+    }
+    if(iResult<0){
         closesocket(ClientSocket);
         shutdown(ClientSocket, SD_SEND);
         return 1;
@@ -45,12 +50,22 @@ int isJugadorActivo(){
     return jugadorActivo;
 }
 
+void anularEspectadores(){
+    for(int i =0;i<MAX_CLIENTS;i++){
+        {
+            closesocket(espectadorActivo[i]);
+            espectadorActivo[i]=false;
+        }
+    }
+}
+
 int recibirDatos(char* datos){
     int resultado;
     if(jugadorActivo){
         resultado=recibirMensaje(JugadorSocket,datos);
         if(resultado==MESSAGE_ERROR){
             jugadorActivo=false;
+            anularEspectadores();
         }
     }else{
         resultado=MESSAGE_ERROR;

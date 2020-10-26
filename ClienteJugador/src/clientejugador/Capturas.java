@@ -18,19 +18,16 @@ public class Capturas {
     public void capturar(Parser parser){
             try {
 
-                BufferedImage img = new BufferedImage(componente.getWidth(), componente.getHeight(), BufferedImage.TYPE_INT_RGB);
-                componente.paint(img.getGraphics());
-                parser.setImageNumber(String.valueOf(number));
-                File outputfile = new File(parser.getURL() + parser.getImageNumber() +".jpeg");
+                /*File outputfile = new File(parser.getURL() + parser.getImageNumber() +".jpeg");
                 try {
                     ImageIO.write(img, "jpeg", outputfile);
                     number++;
-                   /** if(number==300){
+                   *//** if(number==300){
                         number=0;
-                    }*/
+                    }*//*
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
             }catch (IllegalArgumentException ignored){}
     }
 }

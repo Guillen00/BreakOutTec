@@ -7,7 +7,11 @@ package Espectador;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -16,27 +20,45 @@ import javax.swing.JPanel;
  * @author leona
  */
 public class Aux_Expectador extends JPanel implements Runnable{
-    private Image image;
+    private Image image=null;
     private Client client = new Client("127.0.0.1", 27015);
-    String filename = client.getURL() + ".jpeg";
 
     public Aux_Expectador () {
     }
 
     @Override
     public void paint(Graphics g) {
-        ImageIcon ii = new ImageIcon(filename);
-        File file = new File(filename);
-        image = ii.getImage();
-        g.drawImage(image, 0, 0, 1300,
-                700, this);
-        file.delete();
+        if(image!=null) {
+            g.drawImage(image, 0, 0, 1300,
+                    700, this);
+        }
     }
 
     public void run() {
         while (true) {
-            filename = client.getURL() + ".jpeg";
-            repaint();
+            try{
+                String preimage=client.getURL();
+                if(preimage!=null) {
+                    String[] preByteArray = preimage.substring(1, preimage.length() - 1).split(", ");
+                    byte[] imageArray = new byte[preByteArray.length];
+                    try {
+                        for (Integer i = 0; i < preByteArray.length; i++) {
+
+                            imageArray[i] = (byte) Integer.parseInt(preByteArray[i]);
+                        }
+                        try {
+                            image = ImageIO.read(new ByteArrayInputStream(imageArray));
+                        } catch (IOException ignored) {
+                        }
+                        repaint();
+                    }catch (NumberFormatException e){
+                        e.printStackTrace();
+                    }
+                }else{
+                    client = new Client("127.0.0.1", 27015);
+                }
+            }catch (IndexOutOfBoundsException ignored) {}
+
         }
     }
 }

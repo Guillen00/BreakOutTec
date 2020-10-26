@@ -15,12 +15,13 @@ int calcularLongitudAsString(int number){
 int juegoToChar(char* texto,struct juego* juego){
     char* index= texto;
 
+    sprintf(index, "%d;", juego->imagenumber);
+    index += calcularLongitudAsString(juego->imagenumber);
+
     strcpy(index,juego->url);
     index+=strlen(juego->url);
     *index=';';
     index++;
-    sprintf(index, "%d;", juego->imagenumber);
-    index += calcularLongitudAsString(juego->imagenumber);
 
     sprintf(index, "%d;", juego->puntaje);
     index += calcularLongitudAsString(juego->puntaje);
@@ -58,10 +59,11 @@ void charToJuego(char* texto,struct juego* juego){
     strcpy(copyTexto,texto);
 
     char * token = strtok_r(copyTexto, ";", &aux1);
-    strcpy(juego->url,token);
+    juego->imagenumber=atoi(token);
 
     token = strtok_r(NULL, ";", &aux1);
-    juego->imagenumber=atoi(token);
+
+    strcpy(juego->url,token);
 
     token = strtok_r(NULL, ";", &aux1);
     juego->subirNivel=atoi(token);

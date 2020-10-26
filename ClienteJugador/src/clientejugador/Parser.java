@@ -14,7 +14,14 @@ package clientejugador;
  */
 
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -59,8 +66,8 @@ public class Parser{
     }
 
     public void parserText(String texto){
-        URL = texto.split(";")[0];
-        imageNumber=texto.split(";")[1];
+        URL = texto.split(";")[1];
+        imageNumber=texto.split(";")[0];
         puntaje = texto.split(";")[2];
         record = texto.split(";")[3];
         raquetaMitad = texto.split(";")[4];
@@ -123,9 +130,28 @@ public class Parser{
         return URL;
     }
 
-    public String sendData(){
+    public String sendData(JPanel componente){
       String aux;
-      aux = URL + ";" + imageNumber+ ";"+ Interfaz.SubirNivel.toString() + ";" + Columna.toString() + ";"+ Fila.toString();
+
+      BufferedImage img=null;
+      try {
+          img = new BufferedImage(componente.getWidth(), componente.getHeight(), BufferedImage.TYPE_INT_RGB);
+          componente.paint(img.getGraphics());
+
+
+          ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+          try {
+              ImageIO.write(img, "jpeg", byteArrayOutputStream);
+              URL= Arrays.toString(byteArrayOutputStream.toByteArray());
+              imageNumber=String.valueOf(byteArrayOutputStream.size());
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }catch (IllegalArgumentException e){
+          URL= "NULL";
+          imageNumber="0";
+      }
+      aux = imageNumber+ ";"+ URL + ";" +Interfaz.SubirNivel.toString() + ";" + Columna.toString() + ";"+ Fila.toString();
       Columna= -1;
       Fila= -1;      
       return aux;

@@ -17,7 +17,7 @@ struct juego juego={NULL,.url=NULL,.imagenumber=0,.puntaje=0,0,0,NULL,puntajeVer
                     puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
                     probRaqDobleinicial,probVelMasinicial,probVelMenosinicial,
                     probVidaInicial,probBalonInicial};
-char url[300];
+char url[500000];
 int terminate=0;
 
 void liberarListasIntermedio(){
@@ -75,6 +75,9 @@ void actualizarJuego(char* texto){
         enviarDatos(texto);
         juego.ladrillo=NULL;
         ///Se reciben los datos
+        for(int i=0;i<500000;i++){
+            texto[i]='\0';
+        }
         if(recibirDatos(texto) != MESSAGE_ERROR) {
             ///Se parsean los datos
             charToJuego(texto, &juego);
@@ -209,16 +212,16 @@ void iniciar(){
     DWORD ThreadId;
     CreateThread(NULL, 0, iniciarServer,NULL, 0, &ThreadId);
 
-    char texto[DEFAULT_BUFLEN];
+    char texto[500000];
     juego.url=url;
 
-    for(int i=0;i<300;i++){
+    for(int i=0;i<500000;i++){
         url[i]='\0';
     }
     _getcwd(url, sizeof(url));
     iniciarInteraccion();
     while(!terminate){
-        for(int i=0;i<DEFAULT_BUFLEN;i++){
+        for(int i=0;i<500000;i++){
             texto[i]='\0';
         }
         actualizarJuego(texto);
