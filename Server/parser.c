@@ -69,6 +69,12 @@ void charToJuego(char* texto,struct juego* juego){
     juego->subirNivel=atoi(token);
 
     token = strtok_r(NULL, ";", &aux1);
+    int puntaje=atoi(token);
+    if(puntaje>juego->record){
+        juego->record=puntaje;
+    }
+
+    token = strtok_r(NULL, ";", &aux1);
     int columna= atoi(token);
 
     token = strtok_r(NULL, ";", &aux1);

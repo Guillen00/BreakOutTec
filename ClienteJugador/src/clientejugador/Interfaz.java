@@ -207,7 +207,7 @@ public class Interfaz extends JPanel {
     private class Server implements Runnable {
         public void run() {
             try {
-                client.socket.setSoTimeout(400);
+                client.socket.setSoTimeout(500);
             } catch (SocketException e) {
                 e.printStackTrace();
             }

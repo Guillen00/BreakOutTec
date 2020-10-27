@@ -163,7 +163,7 @@ public class Parser{
           URL= "NULL";
           imageNumber="0";
       }
-      aux = imageNumber+ ";"+ URL + ";" +Interfaz.SubirNivel.toString() + ";" + Columna.toString() + ";"+ Fila.toString();
+      aux = imageNumber+ ";"+ URL + ";" +Interfaz.SubirNivel.toString() +";"+ Interfaz.Puntaje+ ";" + Columna.toString() + ";"+ Fila.toString();
       Columna= -1;
       Fila= -1;      
       return aux;

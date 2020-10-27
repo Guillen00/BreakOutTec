@@ -63,9 +63,6 @@ void subirPuntaje(struct ladrillo* ladrillo){
         } else if (color == ROJO) {
             juego.puntaje += juego.puntajeRojo;
         }
-        if(juego.puntaje>juego.record){
-            juego.record=juego.puntaje;
-        }
     }
 }
 
