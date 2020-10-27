@@ -74,15 +74,19 @@ void actualizarJuego(char* texto){
         juegoToChar(texto, &juego);
         enviarDatos(texto);
         juego.ladrillo=NULL;
+
         ///Se reciben los datos
         for(int i=0;i<500000;i++){
             texto[i]='\0';
         }
-        if(recibirDatos(texto) != MESSAGE_ERROR) {
-            ///Se parsean los datos
-            charToJuego(texto, &juego);
-            checkearSubirNivel();
-            subirPuntaje(juego.ladrillo);
+        if(isJugadorActivo()) {
+            if (recibirDatos(texto) != MESSAGE_ERROR) {
+                if (*texto != '\0') {
+                    charToJuego(texto, &juego);
+                    checkearSubirNivel();
+                    subirPuntaje(juego.ladrillo);
+                }
+            }
         }
     }else{
         juego.puntaje=0;
@@ -221,9 +225,6 @@ void iniciar(){
     _getcwd(url, sizeof(url));
     iniciarInteraccion();
     while(!terminate){
-        for(int i=0;i<500000;i++){
-            texto[i]='\0';
-        }
         actualizarJuego(texto);
         actualizacionDeAdministrador();
     }

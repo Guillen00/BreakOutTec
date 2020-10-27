@@ -25,6 +25,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 
 public class Interfaz extends JPanel {
@@ -35,7 +38,7 @@ public class Interfaz extends JPanel {
     private Bola ball2;
     private Raqueta paddle;
     private Ladrillo[] bricks;
-    static Integer vidas = 3;
+    static Integer vidas = 10000;
     private String vida = "";
     public static Integer niveles = 1;
     private String nivel = "";
@@ -45,15 +48,14 @@ public class Interfaz extends JPanel {
     private String record = "";
     public static Boolean PowerBall = false;
     static Integer SubirNivel = 0;
-    public Client client = new Client("127.0.0.1", 27015);
+    private Client client = new Client("127.0.0.1", 27015);
     private JPanel interfaz=this;
+    private Thread thread = new Thread(new Server());
+
     public static Parser Parser_mensaje = Parser.getInstance();
 
     public Interfaz() {
-        
-        
         initBoard();
-        
     }
 
     private void initBoard() {
@@ -62,7 +64,8 @@ public class Interfaz extends JPanel {
         setFocusable(true);
         setPreferredSize(new Dimension(1300, 700));
         setBackground(Color.BLACK);
-    
+        thread.start();
+
         gameInit();
     }
 
@@ -71,9 +74,7 @@ public class Interfaz extends JPanel {
         bricks = new Ladrillo[Variables.N_OF_BRICKS];
         ball = new Bola();
         paddle = new Raqueta();
-        Thread thread = new Thread(new Server());
-        thread.start();
-        
+
         Integer k = 0;
 
         for (Integer i = 0; i < 8; i++) {
@@ -201,18 +202,42 @@ public class Interfaz extends JPanel {
         }
     }
 
-
+    int t=0;
     private Boolean flag=true;
     private class Server implements Runnable {
         public void run() {
+            try {
+                client.socket.setSoTimeout(400);
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
             while(flag) {
+                t=0;
                 String entrada = client.getMessage();
+
                 if (entrada != null) {
                     Parser_mensaje.parserText(entrada);
                     Parser_mensaje.Update();
-                    client.sendMessage(Parser_mensaje.sendData(interfaz));
+
+                    t=1;
+
+                    String message=Parser_mensaje.sendData(interfaz);
+                    client.sendMessage(message);
                 }else{
-                    client=new Client("127.0.0.1", 27015);
+                    do {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        client.closeConnection();
+                        client = new Client("127.0.0.1", 27015);
+                        try {
+                            client.socket.setSoTimeout(400);
+                        } catch (NullPointerException|SocketException e) {
+                            e.printStackTrace();
+                        }
+                    }while (client.socket==null);
                 }
             }
         }
@@ -223,17 +248,15 @@ public class Interfaz extends JPanel {
         paddle.move();
         checkCollision();
         repaint();
-
     }
-
-
 
     private void stopGame() {
 
         vidas = 0;
         timer.stop();
     }
-int xnono=0;
+
+    int xnono=0;
     private void checkCollision() {
 
         if (ball.getRectBall().getMaxY() > Variables.BOTTOM_EDGE) {

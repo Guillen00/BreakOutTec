@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class Client
 {
     private final String TIPO="Tipo: Espectador";
-    private Socket socket;
+    public Socket socket;
     private PrintStream out;
     private BufferedReader in;
 
@@ -29,7 +29,7 @@ public class Client
 
         } catch(IOException u)
         {
-            closeConnection();
+           // closeConnection();
         }
     }
 
@@ -78,7 +78,7 @@ public class Client
         return message;
     }
 
-    private void closeConnection(){
+    public void closeConnection(){
         try
         {
             in.close();

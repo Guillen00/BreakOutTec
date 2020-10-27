@@ -31,7 +31,7 @@ int recibirMensaje(SOCKET ClientSocket,char* rec){
     }
     if(iResult<0){
         closesocket(ClientSocket);
-        shutdown(ClientSocket, SD_SEND);
+        shutdown(ClientSocket, SD_BOTH);
         return 1;
     }
     return 0;
@@ -41,6 +41,7 @@ int enviarMensaje(SOCKET ClientSocket,char* message){
     int iSendResult = send(ClientSocket, message, strlen(message)+1, 0);
     if (iSendResult == SOCKET_ERROR) {
         closesocket(ClientSocket);
+        shutdown(ClientSocket, SD_BOTH);
         return 1;
     }
     return 0;
@@ -50,14 +51,16 @@ int isJugadorActivo(){
     return jugadorActivo;
 }
 
-void anularEspectadores(){
+/*void anularEspectadores(){
     for(int i =0;i<MAX_CLIENTS;i++){
         {
-            closesocket(espectadorActivo[i]);
+            closesocket(EspectadoresSockets[i]);
+            shutdown(EspectadoresSockets[i], SD_BOTH);
             espectadorActivo[i]=false;
         }
     }
-}
+}*/
+
 
 int recibirDatos(char* datos){
     int resultado;
@@ -65,7 +68,7 @@ int recibirDatos(char* datos){
         resultado=recibirMensaje(JugadorSocket,datos);
         if(resultado==MESSAGE_ERROR){
             jugadorActivo=false;
-            anularEspectadores();
+            //anularEspectadores();
         }
     }else{
         resultado=MESSAGE_ERROR;
@@ -79,7 +82,11 @@ void enviarDatos(char* datos){
         if(espectadorActivo[i]){
             int resultado=enviarMensaje(EspectadoresSockets[i],datos);
             if(resultado==MESSAGE_ERROR){
-                espectadorActivo[i]=false;
+                if(JugadorSocket==EspectadoresSockets[i]){
+                    //anularEspectadores();
+                    jugadorActivo=false;
+                }
+                espectadorActivo[i] = false;
             }
         }
     }

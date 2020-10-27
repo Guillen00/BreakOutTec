@@ -14,14 +14,20 @@ package clientejugador;
  */
 
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -42,7 +48,7 @@ public class Parser{
     private String dosBolas;
     private Integer Columna=-1;
     private Integer Fila =-1;
-
+    private Integer oldPuntaje=0;
     
     private static Parser instanciaUnica;
  
@@ -116,7 +122,10 @@ public class Parser{
         if(isDosBolas()){
             Interfaz.PowerBall = true;
         }
-        Interfaz.Puntaje = Integer.parseInt(puntaje);
+        if(Integer.parseInt(puntaje)==0){
+            oldPuntaje=Interfaz.Puntaje;
+        }
+        Interfaz.Puntaje = Integer.parseInt(puntaje)+oldPuntaje;
         Interfaz.Record = Integer.parseInt(record);
 
     } 
@@ -135,14 +144,17 @@ public class Parser{
 
       BufferedImage img=null;
       try {
+
           img = new BufferedImage(componente.getWidth(), componente.getHeight(), BufferedImage.TYPE_INT_RGB);
           componente.paint(img.getGraphics());
 
-
           ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
           try {
+
               ImageIO.write(img, "jpeg", byteArrayOutputStream);
+
               URL= Arrays.toString(byteArrayOutputStream.toByteArray());
+
               imageNumber=String.valueOf(byteArrayOutputStream.size());
           } catch (IOException e) {
               e.printStackTrace();
