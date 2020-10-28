@@ -7,23 +7,33 @@ package clientejugador;
 
 /**
  *
- * @author Usuario
+ * @author Leonardo Guillen
+ * Esta clase se encarga de crear el objeto Ladrillo heredando las caracteristicas de la animacion
  */
 
 import javax.swing.ImageIcon;
 
 public class Ladrillo extends Animacion{
+    /*Se inicializan las variables por utilizar en la clase
+    *
+    */
+    
     private Boolean destroyed;
 
     public static Parser Aux = Parser.getInstance();
 
-    
+    /*Se crea un contructor el cual envia una posicion en X y Y 
+    *
+    */
 
     public Ladrillo(Integer x, Integer y) {
 
         initLadrillo(x, y);
     }
 
+    /*Se crea un contructor el cual da una posicion en X y Y , carga la imagen u le da sus dimensiones
+    *
+    */
     private void initLadrillo(Integer x, Integer y) {
 
         this.x = x;
@@ -35,6 +45,9 @@ public class Ladrillo extends Animacion{
         getImageDimensionsBrick();
     }
 
+    /*Esta funcion se encarga de cargar la imagen dependiendo de la fila en la cual se encuentra el ladrillo
+    *
+    */
     private void loadImage() {
         
         if(((this.y-50)/30) == 7){
@@ -70,16 +83,25 @@ public class Ladrillo extends Animacion{
         image = ii.getImage();}
     }
 
+    /*Retorna un boleano 
+    *
+    */
     Boolean isDestroyed() {
 
         return destroyed;
     }
 
+    /*Asigna in valor para el booleano destroyed
+    *
+    */
     void setDestroyed1(Boolean val) {
 
         destroyed = val;
     }
     
+    /*Esta funcion se encarga de recibir un X y Y del ladrillo y se envia a la funion LadrillosRotos la fila y columna en la cual se encuentra
+    *
+    */
     public void enviar_Matriz(Integer x,Integer y){
         Integer columna = 1;
         Integer fila = 1;

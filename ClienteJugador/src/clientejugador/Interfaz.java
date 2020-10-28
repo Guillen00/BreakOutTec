@@ -5,10 +5,7 @@
  */
 package clientejugador;
 
-/**
- *
- * @author leona
- */
+
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -29,8 +26,16 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-
+/**
+ *
+ * @author Leonardo Guillen 
+ * Esta clase es la encargada de manejar toda la logica del juego, colisiones , verificaciones si gana o pierde , manejo de vidas , creacion de objetos
+ * dibujar en pantalla todos los objetos, una funcion que reciba la interaccion con el teclado y un ciclo el cual nos ayuda a correr varias funciones una y otra vez.
+ */
 public class Interfaz extends JPanel {
+    /*Se inicializan las variables por utilizar en la clase
+    *
+    */
     
     private Timer timer;
     private String message = "Game Over";
@@ -54,10 +59,17 @@ public class Interfaz extends JPanel {
 
     public static Parser Parser_mensaje = Parser.getInstance();
 
+    
+    /*Se crea un contructor de la clase la cual llama initBoard
+    *
+    */
     public Interfaz() {
         initBoard();
     }
 
+    /* Funcion donde de crea un nuevo TAdapter y da caracteristicas a la pantalla
+    *
+    */
     private void initBoard() {
         
         addKeyListener(new TAdapter());
@@ -69,6 +81,9 @@ public class Interfaz extends JPanel {
         gameInit();
     }
 
+    /*Esta funcion inicia el juego creando nuevos elementos para la raqueta, bola y ladrillos y ademas crea el ciclo en el cual estara el juego
+    *
+    */
     private void gameInit() {
         SubirNivel =0;
         bricks = new Ladrillo[Variables.N_OF_BRICKS];
@@ -92,6 +107,9 @@ public class Interfaz extends JPanel {
     }
     
 
+    /*Esta funcion dibuja los objetos y controla el manejo de vidas elige si se pierde o se sigue jugando
+    *
+    */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -118,6 +136,10 @@ public class Interfaz extends JPanel {
         Toolkit.getDefaultToolkit().sync();
     }
 
+    /*Esta funcion Dibuja los datos que se van a manejar en el juego y se dibujan los ladrillos
+    *
+    */
+    
     private void drawObjects(Graphics2D g2d) {
         
         g2d.drawRect(0, 0, 1050, 800);
@@ -148,6 +170,9 @@ public class Interfaz extends JPanel {
         }
     }
 
+    /*Esta funcion controla sí se presionan las teclas del teclado
+    *
+    */
     private class TAdapter extends KeyAdapter {
 
         @Override
@@ -163,7 +188,9 @@ public class Interfaz extends JPanel {
         }
     }
     
-    
+    /*Esta funcion se utiliza cuando se finaliza el juego, crea un mensaje donde dice si gano o perdio
+    *
+    */
     private void gameFinished(Graphics2D g2d) {
 
         Font font = new Font("Verdana", Font.BOLD, 40);
@@ -175,11 +202,18 @@ public class Interfaz extends JPanel {
         g2d.drawString(message, 400,350);
     }
     
+    /*Esta funcion dibuja la raqueta
+    *
+    */
     private void drawPaddle(Graphics2D g2d) {
         g2d.drawImage(paddle.getImage(), paddle.getX(), paddle.getY(),
                 Raqueta.LARGORAQUETA, Raqueta.ANCHORAQUETA, this);
     }
     public Integer interruptor1=0;
+    
+    /*Esta funcion dibuja la bola y maneja el crear dos bolas en el juego
+    *
+    */
      private void drawBall(Graphics2D g2d) {
          g2d.drawImage(ball.getImage(), ball.getX(), ball.getY(),
                 ball.getImageWidth(), ball.getImageHeight(), this);
@@ -192,6 +226,9 @@ public class Interfaz extends JPanel {
 
      }
      
+     /*Esta clase interior implementa ActionListener para poder utilizar las funciones internas 
+    *
+    */
      private class GameCycle implements ActionListener {
 
         @Override
@@ -202,8 +239,13 @@ public class Interfaz extends JPanel {
         }
     }
 
-    int t=0;
+    Integer t=0;
     private Boolean flag=true;
+    
+    /* Esta clase Sever se encarga de correr una funcion la cual se encarga de hacer la conexion con el servidor y manejar el recibo y envio de informacion 
+    para el juego
+    *
+    */
     private class Server implements Runnable {
         public void run() {
             try {
@@ -243,6 +285,9 @@ public class Interfaz extends JPanel {
         }
     }
 
+    /*Esta funcion se encarga de darle movimiento a la bola y a la raqueta, tambien revisa si hay colisiones y redibuja los obtetos con sus variables modificadas
+    *
+    */
     private void doGameCycle() {
         ball.move();
         paddle.move();
@@ -250,13 +295,19 @@ public class Interfaz extends JPanel {
         repaint();
     }
 
+    /*Esta funcion para el juego poniendo las vidas en 0 y deteniendo el ciclo
+    *
+    */
     private void stopGame() {
 
         vidas = 0;
         timer.stop();
     }
 
-    int xnono=0;
+    /*Esta funcion se encarga de revisar las colisiones, de la bola con la raqueta , la bola con los ladrillos  y si la bola paso el punto final de 
+    abajo para perder una vida
+    *
+    */
     private void checkCollision() {
 
         if (ball.getRectBall().getMaxY() > Variables.BOTTOM_EDGE) {

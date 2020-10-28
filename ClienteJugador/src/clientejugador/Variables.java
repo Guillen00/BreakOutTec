@@ -7,9 +7,14 @@ package clientejugador;
 
 /**
  *
- * @author leona
+ * @author Leonardo Guillen
+ * 
+ * Esta interfase guarda los valores de variables generales que manejaremos en todo el juego
  */
 public interface Variables {
+    /*Se inicializan las variables por utilizar 
+    *
+    */
     Integer WIDTH = 1050;
     Integer HEIGHT = 800;
     Integer BOTTOM_EDGE = 800;
