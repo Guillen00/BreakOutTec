@@ -10,12 +10,12 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author leona
+ * @author Leonardo Guillen
  */
 public class Espectador extends javax.swing.JFrame {
 
     /**
-     * Creates new form Espectador
+     * Crea nuevo form para Espectador
      */
     public Espectador() {
         initComponents();
@@ -74,6 +74,7 @@ public class Espectador extends javax.swing.JFrame {
 
     /**
      * @param args the command line arguments
+     * Este main inicia la ventana haciendola visible y creando un thread en la cual incluye Aux_Espectador
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -83,12 +84,7 @@ public class Espectador extends javax.swing.JFrame {
         ventana.add(aux);
         hilo.start();
 
-        /*JPanel panel = new JPanel();
         
-        panel.setSize(500, 500);
-        panel.add(new Lienzo());
-        panel.setVisible(true);
-        ventana.add(panel);*/
         ventana.setSize(1300, 700);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setVisible(true);
