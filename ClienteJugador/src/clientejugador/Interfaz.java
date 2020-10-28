@@ -38,7 +38,7 @@ public class Interfaz extends JPanel {
     private Bola ball2;
     private Raqueta paddle;
     private Ladrillo[] bricks;
-    static Integer vidas = 10000;
+    static Integer vidas = 3;
     private String vida = "";
     public static Integer niveles = 1;
     private String nivel = "";

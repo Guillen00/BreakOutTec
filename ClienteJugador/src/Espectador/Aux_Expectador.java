@@ -30,8 +30,8 @@ public class Aux_Expectador extends JPanel implements Runnable{
     @Override
     public void paint(Graphics g) {
         if(image!=null) {
-            g.drawImage(image, 0, 0, 1300,
-                    700, this);
+            g.drawImage(image, 0, 0, 1400,
+                    800, this);
         }
     }
 
