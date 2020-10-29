@@ -5,8 +5,11 @@
 #ifndef SERVER_JUEGO_H
 #define SERVER_JUEGO_H
 
-void algoritmoDeCambioExponencial();
 
- void iniciar();
+/**
+ * Funcion para iniciar la interacion del servidor con los clientes,
+ * en cuanto a las variables del juego
+ */
+void iniciar();
 
 #endif //SERVER_JUEGO_H

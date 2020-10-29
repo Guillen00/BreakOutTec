@@ -5,48 +5,12 @@
 #include <stdlib.h>
 #include "estructuras.h"
 #include "constants.h"
-
-void agregarNodo(struct lista* lista, void* data){
-    struct nodo* nuevoNodo=malloc(sizeof(struct nodo));
-    *nuevoNodo=(struct nodo){data, NULL};
-    struct nodo* actualNodo=lista->primero;
-
-    if (lista->primero==NULL){
-        lista->primero= nuevoNodo;
-    }else{
-        while(actualNodo->next!=NULL){
-            actualNodo=actualNodo->next;
-        }
-        actualNodo->next=nuevoNodo;
-    }
-}
-
-void* obtenerSiguiente(void* anterior, struct lista* lista){
-    struct nodo* actualNodo=lista->primero;
-    bool flag=1;
-    while(actualNodo!=NULL && flag && anterior!=NULL){
-        flag=actualNodo->data!=anterior;
-        actualNodo=actualNodo->next;
-    }
-    return actualNodo==NULL? NULL : actualNodo->data;
-}
-
-void borrarUltimo(struct lista* lista){
-    struct nodo* actualNodo=lista->primero;
-    if(lista->primero!=NULL){
-        if(lista->primero->next!=NULL) {
-            while (actualNodo->next->next != NULL) {
-                actualNodo = actualNodo->next;
-            }
-            free(actualNodo->next);
-            actualNodo->next=NULL;
-        }else{
-            free(lista->primero);
-            lista->primero=NULL;
-        }
-    }
-}
-
+/**
+ * Metodo para obtener el valor en la posicion indicada de una lista
+ * @param lista Lista en la cual buscar
+ * @param pos Posicion a buscar
+ * @return Valor en la posicion buscada
+ */
 void* obtenerValor(struct lista* lista, int pos){
     struct nodo* actualNodo=lista->primero;
     for(int i=0;i<pos;i++) {
@@ -57,6 +21,12 @@ void* obtenerValor(struct lista* lista, int pos){
     }
     return actualNodo->data;
 }
+/**
+ * Metodo para crear un ladrillo
+ * @param color Color al que pertence el ladrillo
+ * @param juego Estructura del juego actual
+ * @return Retorna el ladrillo creado
+ */
 struct ladrillo* crearLadrillo(int color, struct juego* juego){
     struct ladrillo* ladrillo=malloc(sizeof(struct ladrillo));
     ladrillo->color=color;
@@ -78,6 +48,13 @@ struct ladrillo* crearLadrillo(int color, struct juego* juego){
     ladrillo->balon=rand() % 100<juego->probBalon;
     ladrillo->vida=rand() % 100<juego->probVida;
 }
+
+/**
+ * Metodo para crear una fila del juego
+ * @param color Color de la fila
+ * @param juego Estructura actual del juego
+ * @return Retorna una lista de ladrillos que representa la estructura actual del juego
+ */
 struct lista* crearFila(int color, struct juego* juego){
     struct lista* lista=malloc(sizeof(struct lista));
     struct nodo* nuevoNodo=malloc(sizeof(struct nodo));
@@ -96,10 +73,10 @@ struct lista* crearFila(int color, struct juego* juego){
     return lista;
 }
 
-
-
-
-
+/**
+ * Funcion auxiliar para liberar la memoria de una lista
+ * @param lista Lista a liberar
+ */
 void liberarListaAux(struct nodo* cabeza)
 {
     struct nodo* tmp;
@@ -110,7 +87,10 @@ void liberarListaAux(struct nodo* cabeza)
         free(tmp);
     }
 }
-
+/**
+ * Funcion para liberar la memoria de una lista
+ * @param lista Lista a liberar
+ */
 void liberarLista(struct lista* lista)
 {
     liberarListaAux(lista->primero);

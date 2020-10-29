@@ -13,26 +13,49 @@
 #include "windows.h"
 
 
+/**
+ * Se inicializan y definen constantes del juego
+ */
+
+/**
+ * Se crea la estructura de juego inicial
+ */
 struct juego juego={NULL,.url=NULL,.imagenumber=0,.puntaje=0,0,0,NULL,puntajeVerdeInicial,puntajeAmarilloInicial,
                     puntajeNaranjIniciala,puntajeRojoInicial,probRaqMitadinicial,
                     probRaqDobleinicial,probVelMasinicial,probVelMenosinicial,
                     probVidaInicial,probBalonInicial};
+/**
+ * Char array para almacenar la imagen
+ */
 char url[500000];
+/**
+ * Constante que indica si ya termina la ejecucion
+ */
 int terminate=0;
 
+
+/**
+ * Funcion para eliminar de la memoria todas las listas del juego
+ */
 void liberarListasIntermedio(){
     for(int i=0;i<numFilas;i++) {
         liberarLista(&juego.listas[i]);
     }
 }
 
+
+/**
+ * Funcion para generar nuevas listas de juego (nuevas filas con nuevos ladrillos)
+ */
 void nuevasListas(){
     for(int i=0;i<8;i++){
         juego.listas[i]=*crearFila(i/2, &juego);
     }
 }
 
-
+/**
+ * Algoritmo para incrementar la dificultad del juego
+ */
 void algoritmoDeCambioExponencial(){
     juego.probRaqMitad*=2;
     juego.probRaqDoble/=2;
@@ -42,6 +65,9 @@ void algoritmoDeCambioExponencial(){
     juego.probBalon*=2;
 }
 
+/**
+ * Funcion que se encarga de subir de nivel cuando es necesario
+ */
 void checkearSubirNivel(){
     if(juego.subirNivel) {
         algoritmoDeCambioExponencial();
@@ -51,6 +77,10 @@ void checkearSubirNivel(){
     }
 }
 
+/**
+ * Funcion que se encarga de subir el puntaje cuando es necesario
+ * @param ladrillo Ultimo ladrillo destruido
+ */
 void subirPuntaje(struct ladrillo* ladrillo){
     if(ladrillo!=NULL) {
         int color = ladrillo->color;
@@ -66,6 +96,10 @@ void subirPuntaje(struct ladrillo* ladrillo){
     }
 }
 
+/**
+ * Funcion que se encarga del ciclo del juego
+ * @param texto Char array para guardar datos
+ */
 void actualizarJuego(char* texto){
     if(isJugadorActivo()) {
         juegoToChar(texto, &juego);
@@ -90,6 +124,16 @@ void actualizarJuego(char* texto){
     }
 }
 
+/**
+ * Funcion para realizar cambios en un ladrillo
+ * @param setget Char que indica si la operacion es de get o de set
+ * @param exito Char para indicar si se logró implementar lo pedido
+ * @param setCorrecto Bool que indica si el mensaje original es correcto
+ * @param texto Char que indica el mensaje a mostrar al usuario
+ * @param valorNuevo Int que da el nuevo valor para la propiedad dle ladrillo
+ * @param valor Puntero que indica la propiedad anterior
+ * @param valorOpuesto Puntero que indica la propiedad opuesta del ladrillo
+ */
 void checkearLadrillosAdministradorA(char* setget, int* exito, bool setCorrecto, char* texto,
                                                 int valorNuevo, bool *valor, bool* valorOpuesto){
     if (strcmp(setget, "set") == 0) {
@@ -106,6 +150,14 @@ void checkearLadrillosAdministradorA(char* setget, int* exito, bool setCorrecto,
     }
 }
 
+/**
+ * Funcion para realizar cambios en los puntajes
+ * @param setget Char que indica si la operacion es de get o de set
+ * @param number Nuevo valor de puntaje
+ * @param exito Char para indicar si se logró implementar lo pedido
+ * @param texto Char que indica el mensaje a mostrar al usuario
+ * @param valor Puntero que da el valor anterior del puntaje
+ */
 void checkearPuntajesAdministrador(char* setget, int number, int* exito, char* texto, int* valor){
     if(strcmp(setget,"set")==0) {
         if(number>0){
@@ -118,6 +170,10 @@ void checkearPuntajesAdministrador(char* setget, int number, int* exito, char* t
     }
 }
 
+
+/**
+ * Funcion para realizar actualizaciones indicadas por el administrador
+ */
 void actualizacionDeAdministrador(){
     char comando[COMMAND_LEN];
     char* token;
@@ -208,6 +264,10 @@ void actualizacionDeAdministrador(){
     }
 }
 
+
+/**
+ * Funcion para iniciar la logica del server/juego
+ */
 void iniciar(){
     nuevasListas();
     DWORD ThreadId;

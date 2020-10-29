@@ -7,11 +7,20 @@
 #include "constants.h"
 #include <string.h>
 #include <stdlib.h>
-
+/**
+ * Metodo auxiliar para calcular la longitud de un numero como string
+ * @param number Numero al cual calcular la longitud
+ * @return Longitud en chars del numero
+ */
 int calcularLongitudAsString(int number){
     return snprintf( NULL, 0, "%d", number )+1;
 }
-
+/**
+ * Metodo para convertir los estados del juego en un texto
+ * @param texto Estados del juego parseados
+ * @param juego Estructura de datos del juego
+ * @return Entero que indica el tamano del texto parseado
+ */
 int juegoToChar(char* texto,struct juego* juego){
     char* index= texto;
 
@@ -52,7 +61,11 @@ int juegoToChar(char* texto,struct juego* juego){
     }
     return index-texto;
 }
-
+/**
+ * Metodo para parsear un texto a las variables de juego
+ * @param texto Texto con la informacion nueva
+ * @param juego Estructura de juego actual
+ */
 void charToJuego(char* texto,struct juego* juego){
     char copyTexto[strlen(texto)];
     char* aux1;

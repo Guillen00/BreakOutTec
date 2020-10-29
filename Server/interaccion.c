@@ -12,6 +12,10 @@ bool procesandoComando=false;
 extern int terminate;
 
 
+/**
+ * Funcion que obtiene el comando del usuario y la guarda en una variable para ser leida por otro metodo
+ * @return Retorna un valor usado por el thread que la ejecuta
+ */
 DWORD WINAPI updateInstruction(){
     while(!terminate) {
         if(!procesandoComando) {
@@ -26,12 +30,18 @@ DWORD WINAPI updateInstruction(){
     printf("");
 }
 
+/**
+ * Funcion para eliminar del almacenamiento el comando anterior
+ */
 void cleanBuffer(){
     for(int i=0;i<COMMAND_LEN;i++){
         currentInstruction[i]='\0';
     }
 }
-
+/**
+ * Funcion para leer el siguiente comando del usuario
+ * @param dest Char en el cual se escribe el comando
+ */
 void getComando(char* dest){
     if(nuevoComando==true){
         strcpy(dest,currentInstruction);
@@ -43,6 +53,9 @@ void getComando(char* dest){
     }
 }
 
+/**
+ * Funcion para iniciar la linea de comandos
+ */
 void iniciarInteraccion(){
     printf("Bienvenid@, administrad@r\n\n    Se ha iniciado el servidor\n");
     printf("    Se ha habilitado la linea de comandos\n");

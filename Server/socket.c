@@ -11,10 +11,12 @@
 #include "socket.h"
 #include "estructuras.h"
 
-// Need to link with Ws2_32.lib
+// Link con Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
-// #pragma comment (lib, "Mswsock.lib")
 
+/**
+ * Se definen las variables de los clientes
+ */
 SOCKET JugadorSocket;
 SOCKET EspectadoresSockets[MAX_CLIENTS];
 int jugadorActivo;
@@ -22,6 +24,13 @@ int espectadorActivo[MAX_CLIENTS];
 
 extern int terminate;
 
+
+/**
+ * Funcion para recibir un mensaje de un cliente
+ * @param ClientSocket Cliente del cual recibir
+ * @param rec Char en el cual se devuelve el mensaje
+ * @return Entero con el resultado de la operacion
+ */
 int recibirMensaje(SOCKET ClientSocket,char* rec){
     int iResult = recv(ClientSocket, rec, DEFAULT_BUFLEN, 0);
     char* current= rec;
@@ -37,6 +46,12 @@ int recibirMensaje(SOCKET ClientSocket,char* rec){
     return 0;
 }
 
+/**
+ * Funcion para enviar un mensaje a un cliente
+ * @param ClientSocket Cliente al cual enviar el mensaje
+ * @param message Mensaje a enviar
+ * @return Un entero que indica el resultado de la operacion
+ */
 int enviarMensaje(SOCKET ClientSocket,char* message){
     int iSendResult = send(ClientSocket, message, strlen(message)+1, 0);
     if (iSendResult == SOCKET_ERROR) {
@@ -47,21 +62,21 @@ int enviarMensaje(SOCKET ClientSocket,char* message){
     return 0;
 }
 
+
+/**
+ * Funcion para comprobar si el cliente jugador se encuentra activo
+ * @return Entero que indica si el jugador esta activo
+ */
 int isJugadorActivo(){
     return jugadorActivo;
 }
 
-/*void anularEspectadores(){
-    for(int i =0;i<MAX_CLIENTS;i++){
-        {
-            closesocket(EspectadoresSockets[i]);
-            shutdown(EspectadoresSockets[i], SD_BOTH);
-            espectadorActivo[i]=false;
-        }
-    }
-}*/
 
-
+/**
+ * Funcion para leer los datos enviados por el cliente
+ * @param datos Texto en donde se guardan los datos recibidos
+ * @return Entero que indica si la funcion fue exitosa
+ */
 int recibirDatos(char* datos){
     int resultado;
     if(jugadorActivo){
@@ -76,7 +91,10 @@ int recibirDatos(char* datos){
     return resultado;
 }
 
-
+/**
+ *  Funcion para enviar datos a los clientes
+ * @param datos Datos a enviar
+ */
 void enviarDatos(char* datos){
     for(int i =0;i<MAX_CLIENTS;i++){
         if(espectadorActivo[i]){
@@ -91,7 +109,12 @@ void enviarDatos(char* datos){
         }
     }
 }
-
+/**
+ * Funcion para asignar el cliente jugador
+ * @param ClientSocket Socket del cliente
+ * @param message String que se usara para enviar un mensaje
+ * @return
+ */
 int asignarJugador(SOCKET ClientSocket, char* message){
     if(!jugadorActivo){
         JugadorSocket=ClientSocket;
@@ -105,6 +128,12 @@ int asignarJugador(SOCKET ClientSocket, char* message){
     }
 }
 
+/**
+ * Funcion para agregar un espectador
+ * @param ClientSocket Socket del espectador
+ * @param message Mensaje enviado por el cliente
+ * @return Retorna un entero que indica si hubo exito
+ */
 int asignarEspectador(SOCKET ClientSocket, char* message){
     int asignado=false;
     for(int i=0;i<MAX_CLIENTS;i++){
@@ -125,6 +154,11 @@ int asignarEspectador(SOCKET ClientSocket, char* message){
     }
 }
 
+/**
+ * Funcion para conectar un cliente y asignar su tipo
+ * @param Param Socket
+ * @return Parametro para el thread
+ */
 DWORD WINAPI connectionHandler(LPVOID Param){
     char rec[DEFAULT_BUFLEN];
     char message[DEFAULT_BUFLEN];
@@ -156,6 +190,11 @@ DWORD WINAPI connectionHandler(LPVOID Param){
     }
 }
 
+
+/**
+ * Funcion para inicializar el servidor
+ * @return Valor para el thread
+ */
 DWORD WINAPI iniciarServer()
 {
 

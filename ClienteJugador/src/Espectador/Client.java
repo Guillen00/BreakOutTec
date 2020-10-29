@@ -1,10 +1,11 @@
 package Espectador;
 
-import javax.print.attribute.standard.NumberUp;
 import java.net.*;
 import java.io.*;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * Clase cliente que se encarga de la comunicacion con el servidor
+ */
 public class Client
 {
     private final String TIPO="Tipo: Espectador";
@@ -12,7 +13,11 @@ public class Client
     private PrintStream out;
     private BufferedReader in;
 
-
+    /**
+     * Constructor del cliente
+     * @param address Direccion del servidor
+     * @param port Puerto del servidor
+     */
     public Client(String address, int port)
     {
 
@@ -33,6 +38,11 @@ public class Client
         }
     }
 
+    /**
+     * Funcion para obtener el mensaje del servidor
+     * @return El mensaje del servidor
+     */
+
     public String getMessage(){
         String update=null;
         try{
@@ -43,11 +53,19 @@ public class Client
         return update;
     }
 
+    /**
+     * Funcion para enviar un mensaje
+     * @param Message Mensaje a enviar
+     */
     public void sendMessage(String Message){
         out.print(Message+"\0");
     }
 
-    public String getURL(){
+    /**
+     * Funcion para obtener la imagen
+     * @return Retorna la imagen en string
+     */
+    public String getIMG(){
         try {
             String[] message= getMessage().split(";");
             return message[1];
@@ -56,6 +74,11 @@ public class Client
         }
     }
 
+    /**
+     * Funcion auxiliar para leer el mensaje recibido
+     * @return Retorna el mensaje recibido
+     * @throws IOException Error al recibir
+     */
     private String read() throws IOException {
         String line = in.readLine();
         String message="";
@@ -68,16 +91,12 @@ public class Client
             in.mark(1);
         }
         message+=line;
-/*
-        try {
-            TimeUnit.MILLISECONDS.sleep(100);
-        }catch (InterruptedException u){
-        }
-*/
-
         return message;
     }
 
+    /**
+     * Metodo para cerrar la conexion con el servidor
+     */
     public void closeConnection(){
         try
         {

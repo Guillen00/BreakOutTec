@@ -16,17 +16,22 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-/**
- *
- * @author leona
- */
+
+
 public class Aux_Expectador extends JPanel implements Runnable{
     private Image image=null;
     private Client client = new Client("127.0.0.1", 27015);
 
+    /**
+     * Constructor de la clase
+     */
     public Aux_Expectador () {
     }
 
+    /**
+     * Metodo para renderizar la imagen
+     * @param g
+     */
     @Override
     public void paint(Graphics g) {
         if(image!=null) {
@@ -36,11 +41,13 @@ public class Aux_Expectador extends JPanel implements Runnable{
     }
 
 
-
+    /**
+     * Ciclo para recibir informacion del servidor
+     */
     public void run() {
         while (true) {
             try{
-                String preimage=client.getURL();
+                String preimage=client.getIMG();
                 if(preimage!=null) {
                     String[] preByteArray = preimage.substring(1, preimage.length() - 1).split(", ");
                     byte[] imageArray = new byte[preByteArray.length];
