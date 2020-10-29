@@ -53,7 +53,11 @@ public class Parser{
     private static Parser instanciaUnica;
  
     private Parser() {}
-
+    /*
+    Se utiliza el patron de diseño singeltonde manera tal de que cuando se valla a 
+    utilizar una intancia del tipo parser sea las misma puesto que esta clase es la encargada de 
+    obtener, modificar y enviar valores al servidor
+    */
     private synchronized static void createInstance() {
         if (instanciaUnica == null) { 
             instanciaUnica = new Parser();
@@ -70,7 +74,9 @@ public class Parser{
     public void setURL(String URL) {
         this.URL = URL;
     }
-
+    /*
+    
+    */
     public void parserText(String texto){
         URL = texto.split(";")[1];
         imageNumber=texto.split(";")[0];
@@ -83,25 +89,58 @@ public class Parser{
         masVida = texto.split(";")[8];
         dosBolas = texto.split(";")[9].substring(0,1);
     }
+    /*
+    Revisa si el servidor el valor actual de this.raquetaMitad en caso de que este
+    sea uno devuelve verdadero en caso contrario un falso este boleano es evaluado 
+    para que la raqueta se divida a la mitad 
+    */
     public Boolean isRaquetaMitad(){
         return 1 ==  Integer.parseInt(this.raquetaMitad);
     }
+    /*
+    Revisa si el servidor el valor actual de this.raquetaDoble en caso de que este
+    sea uno devuelve verdadero en caso contrario un falso este boleano es evaluado 
+    para que la raqueta se devuelva a la mitad
+    */
     public Boolean isRaquetaDoble(){
         return 1 ==  Integer.parseInt(this.raquetaDoble);
     }
+    /*
+    Revisa si el servidor el valor actual de this.velocidadMas en caso de que este
+    sea uno devuelve verdadero en caso contrario un falso este boleano es evaluado 
+    para que la pelota aumente su velocidad    
+    */
     public Boolean isVelocidadMas(){
         return 1 ==  Integer.parseInt(this.velocidadMas);
     }
+    /*
+    Revisa si el servidor el valor actual de this.velocidadMenos en caso de que este
+    sea uno devuelve verdadero en caso contrario un falso este boleano es evaluado 
+    para que la pelota disminuya de su velocidad    
+    */
     public Boolean isVelocidadMenos(){
         return 1 ==  Integer.parseInt(this.velocidadMenos);
     }
+    /*
+    Revisa si el servidor el valor actual de this.masVida en caso de que este
+    sea uno devuelve verdadero en caso contrario un falso este boleano es evaluado 
+    para que aumente su cantidad de vidas actuales  
+    */
     public Boolean isMasVida(){
         return 1 ==  Integer.parseInt(this.masVida);
     }
+    /*
+    Por cuestiones de errores esta funcion no se utiliza
+    */
     public Boolean isDosBolas(){
         return 1 ==  Integer.parseInt(this.dosBolas);
     } 
     
+    
+    /*
+    Actualiza las variables dentro del juego en caso de que se de las varaibles y 
+    se encuentre dentro de los limites etablecidos 
+    */
     
     public void Update(){
         if(isRaquetaMitad() && (Raqueta.minLargo <= Raqueta.LARGORAQUETA)){
@@ -129,16 +168,22 @@ public class Parser{
         Interfaz.Record = Integer.parseInt(record);
 
     } 
+    /*
     
+    */
     public void LadrillosRotos(Integer columna,Integer fila){
         Columna=columna-1;
         Fila=fila-1;
     }
-
+    /*
+    
+    */
     public String getURL() {
         return URL;
     }
-
+    /*
+    
+    */
     public String sendData(JPanel componente){
       String aux;
 
@@ -168,11 +213,15 @@ public class Parser{
       Fila= -1;      
       return aux;
     }
-
+    /*
+    
+    */
     public String getImageNumber() {
         return imageNumber;
     }
-
+    /*
+    
+    */
     public void setImageNumber(String imageNumber) {
         this.imageNumber = imageNumber;
     }
