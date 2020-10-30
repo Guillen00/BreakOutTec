@@ -16,7 +16,7 @@
 #define VERDE 3
 #define AMARILLO 2
 #define NARANJA 1
-#define ROJO 1
+#define ROJO 0
 
 
 /**
